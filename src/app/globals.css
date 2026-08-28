@@ -1,26 +1,479 @@
+/* ====================================================================
+   Zen Atlas — Japanese Zen Design System
+   Inspired by sumi-e ink, washi paper, lacquered wood, and vermilion seal
+   ==================================================================== */
+
 @import "tailwindcss";
 
+/* --------------------------------------------------------------------
+   Design tokens — Dark (sumi-ink) and Light (washi-paper) themes
+   -------------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Ink palette (dark mode) — default */
+  --ink-50:  #f3eee5;
+  --ink-100: #e8e0d0;
+  --ink-200: #cdbfa6;
+  --ink-300: #a89677;
+  --ink-400: #7d6a4f;
+  --ink-500: #574731;
+  --ink-600: #3a2f20;
+  --ink-700: #261d12;
+  --ink-800: #181208;
+  --ink-900: #0e0a05;
+  --ink-950: #070502;
+
+  /* Paper palette (light mode) */
+  --paper-50:  #faf6ec;
+  --paper-100: #f1ead7;
+  --paper-200: #e5dcc1;
+  --paper-300: #d4c7a4;
+  --paper-400: #b8a983;
+  --paper-500: #8d7c5a;
+  --paper-600: #5d4f33;
+
+  /* Accents — restrained, ceremonial */
+  --vermilion-300: #e89a8a;
+  --vermilion-500: #c14a3a;     /* shu-iro */
+  --vermilion-600: #a23a2c;
+  --vermilion-700: #7a2b20;
+
+  --sakura-300: #f3c8cf;
+  --sakura-400: #e8a3af;
+  --sakura-500: #d77f8e;
+
+  --gold-300: #d6b66e;
+  --gold-400: #b8902f;
+  --gold-500: #8a6720;
+
+  --moss-400: #6b7c4f;
+  --moss-500: #4a5832;
+
+  --indigo-ink: #2a3450;
+  --indigo-ink-deep: #161d33;
+
+  /* Semantic — dark default */
+  --bg-base:        var(--ink-950);
+  --bg-elevated:    var(--ink-900);
+  --bg-paper:       var(--ink-800);
+  --bg-ink:         var(--ink-700);
+  --fg-base:        var(--ink-100);
+  --fg-muted:       var(--ink-300);
+  --fg-faint:       var(--ink-400);
+  --fg-strong:      #f7f0e0;
+  --accent:         var(--vermilion-500);
+  --accent-soft:    var(--vermilion-300);
+  --rule:           rgba(232, 224, 208, 0.10);
+  --rule-strong:    rgba(232, 224, 208, 0.20);
+  --shadow-ink:     0 30px 80px -20px rgba(0,0,0,0.7);
+
+  /* Surfaces — frosted glass, paper, lacquer */
+  --glass-bg:        rgba(20, 15, 8, 0.45);
+  --glass-border:    rgba(232, 224, 208, 0.08);
+  --glass-highlight: rgba(255, 240, 220, 0.05);
+  --paper-shadow:    0 1px 0 rgba(255,255,255,0.04) inset, 0 24px 60px -28px rgba(0,0,0,0.55);
+
+  /* Motion */
+  --ease-zen: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-instant: 120ms;
+  --dur-quick: 240ms;
+  --dur-base: 380ms;
+  --dur-slow: 640ms;
+  --dur-stately: 1100ms;
+}
+
+.light {
+  --bg-base:        var(--paper-50);
+  --bg-elevated:    var(--paper-100);
+  --bg-paper:       #f7f1e0;
+  --bg-ink:         #ebdfc4;
+  --fg-base:        #1f1a0e;
+  --fg-muted:       #5a4d2f;
+  --fg-faint:       #8a7a55;
+  --fg-strong:      #0d0a05;
+  --accent:         var(--vermilion-600);
+  --accent-soft:    var(--vermilion-500);
+  --rule:           rgba(31, 26, 14, 0.10);
+  --rule-strong:    rgba(31, 26, 14, 0.22);
+  --shadow-ink:     0 24px 60px -28px rgba(80, 60, 20, 0.30);
+
+  --glass-bg:        rgba(250, 246, 236, 0.55);
+  --glass-border:    rgba(31, 26, 14, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.40);
+  --paper-shadow:    0 1px 0 rgba(255,255,255,0.5) inset, 0 30px 70px -34px rgba(120, 90, 30, 0.30);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink-50:  var(--ink-50);
+  --color-ink-100: var(--ink-100);
+  --color-ink-200: var(--ink-200);
+  --color-ink-300: var(--ink-300);
+  --color-ink-400: var(--ink-400);
+  --color-ink-500: var(--ink-500);
+  --color-ink-600: var(--ink-600);
+  --color-ink-700: var(--ink-700);
+  --color-ink-800: var(--ink-800);
+  --color-ink-900: var(--ink-900);
+  --color-ink-950: var(--ink-950);
+
+  --color-paper-50:  var(--paper-50);
+  --color-paper-100: var(--paper-100);
+  --color-paper-200: var(--paper-200);
+  --color-paper-300: var(--paper-300);
+  --color-paper-400: var(--paper-400);
+  --color-paper-500: var(--paper-500);
+  --color-paper-600: var(--paper-600);
+
+  --color-vermilion-300: var(--vermilion-300);
+  --color-vermilion-500: var(--vermilion-500);
+  --color-vermilion-600: var(--vermilion-600);
+  --color-vermilion-700: var(--vermilion-700);
+
+  --color-sakura-300: var(--sakura-300);
+  --color-sakura-400: var(--sakura-400);
+  --color-sakura-500: var(--sakura-500);
+
+  --color-gold-300: var(--gold-300);
+  --color-gold-400: var(--gold-400);
+  --color-gold-500: var(--gold-500);
+
+  --color-moss-400: var(--moss-400);
+  --color-moss-500: var(--moss-500);
+
+  --color-bg: var(--bg-base);
+  --color-fg: var(--fg-base);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-faint: var(--fg-faint);
+  --color-fg-strong: var(--fg-strong);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-glass-bg: var(--glass-bg);
+  --color-glass-border: var(--glass-border);
+
+  --font-serif-jp: var(--font-serif-jp);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-jp: var(--font-jp);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* --------------------------------------------------------------------
+   Global resets and base typography
+   -------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--bg-base);
+  color: var(--fg-base);
+  font-family: var(--font-sans), "Hiragino Mincho ProN", "Yu Mincho", "Songti SC", "Source Han Serif", serif;
+  font-feature-settings: "ss01", "kern";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection { background: var(--vermilion-500); color: var(--ink-50); }
+
+/* Custom scrollbar — thin, restrained */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--rule-strong);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--accent); background-clip: padding-box; border: 2px solid transparent; }
+
+/* --------------------------------------------------------------------
+   Type scale — display, headings, body
+   -------------------------------------------------------------------- */
+.font-display { font-family: var(--font-display), "Hiragino Mincho ProN", "Yu Mincho", serif; letter-spacing: -0.01em; }
+.font-jp { font-family: var(--font-jp), "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif; }
+.font-mono { font-family: var(--font-mono), "JetBrains Mono", "SF Mono", Menlo, monospace; }
+
+.text-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+
+.headline-display {
+  font-family: var(--font-display), "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-weight: 400;
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--fg-strong);
+}
+
+.headline-xl {
+  font-family: var(--font-display), serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--fg-strong);
+}
+
+.headline-lg {
+  font-family: var(--font-display), serif;
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--fg-strong);
+}
+
+.headline-md {
+  font-family: var(--font-display), serif;
+  font-weight: 500;
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  line-height: 1.25;
+  color: var(--fg-strong);
+}
+
+.body-prose {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--fg-base);
+  max-width: 70ch;
+}
+.body-prose p + p { margin-top: 1.1em; }
+.body-prose strong { color: var(--fg-strong); font-weight: 600; }
+.body-prose em { color: var(--fg-base); font-style: italic; }
+.body-prose code { font-family: var(--font-mono); font-size: 0.92em; background: var(--bg-ink); padding: 0.12em 0.4em; border-radius: 4px; }
+
+/* --------------------------------------------------------------------
+   Decorative atmosphere — sumi-ink mist, paper grain
+   -------------------------------------------------------------------- */
+.atmosphere-mist {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(60% 50% at 20% 0%, rgba(193, 74, 58, 0.08), transparent 70%),
+    radial-gradient(50% 40% at 80% 30%, rgba(232, 163, 175, 0.06), transparent 70%),
+    radial-gradient(70% 60% at 50% 100%, rgba(42, 52, 80, 0.10), transparent 70%);
+  filter: blur(0.4px);
+}
+.light .atmosphere-mist {
+  background:
+    radial-gradient(60% 50% at 20% 0%, rgba(193, 74, 58, 0.06), transparent 70%),
+    radial-gradient(50% 40% at 80% 30%, rgba(122, 43, 32, 0.05), transparent 70%),
+    radial-gradient(70% 60% at 50% 100%, rgba(184, 144, 47, 0.07), transparent 70%);
+}
+
+.paper-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 3px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: overlay;
+}
+.light .paper-grain { opacity: 0.10; }
+
+/* Ink stroke decoration used as a section divider */
+.ink-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--rule-strong) 30%, var(--rule-strong) 70%, transparent);
+  margin: 3rem 0;
+}
+
+/* --------------------------------------------------------------------
+   Glass surface — frosted ink
+   -------------------------------------------------------------------- */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  box-shadow: var(--paper-shadow);
+  position: relative;
+}
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(135deg, var(--glass-highlight) 0%, transparent 30%, transparent 70%, transparent 100%);
+}
+
+/* --------------------------------------------------------------------
+   Paper surface — for content panels
+   -------------------------------------------------------------------- */
+.paper {
+  background: var(--bg-paper);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  box-shadow: var(--paper-shadow);
+}
+
+/* --------------------------------------------------------------------
+   Vermilion seal — a small ceremonial mark used as a brand element
+   -------------------------------------------------------------------- */
+.seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  background: var(--vermilion-500);
+  color: #fff5e6;
+  font-family: var(--font-jp);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 4px;
+  letter-spacing: 0;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.2) inset, 0 4px 14px -6px rgba(193, 74, 58, 0.5);
+}
+
+/* --------------------------------------------------------------------
+   Focus ring
+   -------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* --------------------------------------------------------------------
+   Code block styling — matches the design system
+   -------------------------------------------------------------------- */
+pre, code, .code-area {
+  font-family: var(--font-mono);
+}
+pre {
+  background: var(--ink-900);
+  color: var(--ink-100);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+.light pre { background: var(--paper-100); color: var(--paper-600); border-color: var(--rule-strong); }
+:not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--bg-ink);
+  padding: 0.12em 0.4em;
+  border-radius: 4px;
+  border: 1px solid var(--rule);
+}
+
+/* --------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: transform var(--dur-quick) var(--ease-zen),
+              background var(--dur-quick) var(--ease-soft),
+              border-color var(--dur-quick) var(--ease-soft),
+              box-shadow var(--dur-quick) var(--ease-soft);
+  border: 1px solid transparent;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  background: var(--vermilion-500);
+  color: #fff5e6;
+  box-shadow: 0 6px 18px -8px rgba(193, 74, 58, 0.6), 0 1px 0 rgba(255,255,255,0.1) inset;
+}
+.btn-primary:hover { background: var(--vermilion-600); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--fg-base);
+  border-color: var(--rule-strong);
+}
+.btn-ghost:hover { background: var(--bg-ink); border-color: var(--accent); }
+
+.btn-ink {
+  background: var(--ink-700);
+  color: var(--ink-50);
+  border-color: var(--rule-strong);
+}
+.btn-ink:hover { background: var(--ink-600); }
+.light .btn-ink { background: var(--paper-200); color: var(--paper-600); }
+.light .btn-ink:hover { background: var(--paper-300); }
+
+.btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+.btn-lg { padding: 0.75rem 1.4rem; font-size: 1rem; }
+
+/* --------------------------------------------------------------------
+   Form controls
+   -------------------------------------------------------------------- */
+.input {
+  background: var(--bg-paper);
+  border: 1px solid var(--rule-strong);
+  color: var(--fg-base);
+  padding: 0.55rem 0.9rem;
+  border-radius: 10px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  transition: border-color var(--dur-quick) var(--ease-soft), box-shadow var(--dur-quick) var(--ease-soft);
+  width: 100%;
+}
+.input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(193, 74, 58, 0.18); }
+
+/* --------------------------------------------------------------------
+   Decorative hanzi/kanji accent (sparingly used)
+   -------------------------------------------------------------------- */
+.kanji {
+  font-family: var(--font-jp);
+  font-weight: 400;
+  color: var(--fg-faint);
+  letter-spacing: 0.1em;
+}
+
+/* --------------------------------------------------------------------
+   Utility: hairline, fade
+   -------------------------------------------------------------------- */
+.hairline { border-color: var(--rule); }
+.hairline-b { border-bottom: 1px solid var(--rule); }
+.hairline-t { border-top: 1px solid var(--rule); }
+
+/* --------------------------------------------------------------------
+   Reduced motion
+   -------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+/* --------------------------------------------------------------------
+   Layout helpers
+   -------------------------------------------------------------------- */
+.container-zen { max-width: 1280px; margin: 0 auto; padding-left: clamp(1rem, 4vw, 2.5rem); padding-right: clamp(1rem, 4vw, 2.5rem); }
+.container-prose { max-width: 760px; margin: 0 auto; padding-left: clamp(1rem, 4vw, 2.5rem); padding-right: clamp(1rem, 4vw, 2.5rem); }
