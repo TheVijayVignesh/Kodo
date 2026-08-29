@@ -58,7 +58,7 @@ function SakuraField({ reduced }: { reduced: boolean }) {
             filter: "blur(0.5px)",
             opacity: p.opacity,
             animation: `sakuraDrift ${p.duration}s ${p.delay}s ease-in-out infinite`,
-            mixBlendMode: "screen",
+            mixBlendMode: "normal",
           }}
         />
       ))}

@@ -6,8 +6,15 @@
  */
 const SCRIPT = `(() => {
   try {
-    const stored = localStorage.getItem('zen-atlas-theme');
-    const theme = stored || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    let theme;
+    const raw = localStorage.getItem('zen-atlas-v1');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      theme = parsed?.state?.theme;
+    }
+    if (!theme) {
+      theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
     if (theme === 'light') {
       document.documentElement.classList.add('light');
     } else {

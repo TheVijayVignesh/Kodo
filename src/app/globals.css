@@ -282,7 +282,7 @@ body {
   background-image:
     repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 3px),
     repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 3px);
-  mix-blend-mode: overlay;
+  mix-blend-mode: normal;
 }
 .light .paper-grain { opacity: 0.10; }
 
@@ -304,6 +304,7 @@ body {
   border-radius: 18px;
   box-shadow: var(--paper-shadow);
   position: relative;
+  transform: translateZ(0);
 }
 .glass::before {
   content: "";
