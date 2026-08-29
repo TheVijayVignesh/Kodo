@@ -43,16 +43,19 @@ Route (app)
 | Homepage loads, shows studio heading | ✓ |
 | Module 1 page lists all 9 lectures | ✓ (9 `<a href="/modules/1/m1l..">` found) |
 | Every Module 1 lecture loads and renders hero | ✓ (9 / 9) |
+| Every Module 2 lecture loads and renders hero | ✓ (10 / 10) |
+| Module 2 page lists all 10 lectures | ✓ |
 | Exam page renders both papers and reveal controls | ✓ |
 | Sources page lists research sources | ✓ |
 | 404 page renders for unknown routes | ✓ |
-| Theme toggle changes `data-theme` attribute | ✓ (after fixing a hydration race in tests) |
+| Theme toggle changes `data-theme` attribute | ✓ |
 
 ### Coding exercises
 | Check | Result |
 |-------|--------|
 | FizzBuzz (m1l05-ex01) with correct solution → "All tests passed" | ✓ verified via Playwright |
 | HTML semantic content (m1l02-ex01) with correct solution → 7 / 7 tests passed | ✓ verified via Playwright |
+| M2 React exercise (m2l01-ex01) with starter code → "Passed — 1 × h1 found" | ✓ verified via Playwright |
 | Wrong / incomplete solutions produce detailed failure messages | ✓ ("Expected at least 1 of selector `header` — found 0. Expected: ≥ 1, Received: 0") |
 | Solution reveal works | ✓ |
 | Hints reveal works | ✓ |
@@ -79,10 +82,12 @@ Route (app)
 
 | Page | Result |
 |------|--------|
-| Homepage (dark) | Renders with seal 禅, headline, stats, Continue learning, path with dotted curve. |
+| Homepage (dark) | Renders with seal 禅, headline, 19-lecture stat, Continue learning, path with dotted curve, three cards (Module 1, Module 2, Exam Hall). |
 | Homepage (light) | Cream background, dark text. |
 | Module 1 page | Lists all 9 lectures with status, progress, exercise count, difficulty. |
+| Module 2 page | Lists all 10 lectures (React, MVC/ES6, JSX, Quiz, JSX Pt 2, State, Hook, Routing, Bootstrap, Capstone). |
 | Lecture page (m1l01) | Hero, kanji seal, objectives, prose, diagram, concept with mental model, pitfall, interactive PageAnatomy, mistakes, exercise, quiz, summary, sources, completion, prev/next. |
+| Lecture page (m2l01) | React hero, objectives, prose, ReactSandbox interactive, mistakes, React exercise, quiz, summary, sources, completion, prev/next. |
 | Lecture footer (m1l01) | Sources separated by `mt-20` from content; Lecture completion separated by `mt-12` from sources. No squishing. |
 | Exam Hall | Both papers render with question cards, marks/KL/CO chips, code blocks render correctly (no hydration warnings). |
 | Sources page | Grouped by source type. |
@@ -125,15 +130,18 @@ All other visual content (diagrams, particles) is hand-authored in code. No AI-g
 
 ## Known limitations
 
-- **Module 2 (React) is not implemented** in this milestone, per the master specification's scoping.
-- **No 3D environment** — removed per user direction. The visual depth is achieved through petals + atmosphere gradients + inline SVG diagrams instead.
-- **Sandbox `allow-same-origin` flag** — the checker iframe uses this so the parent can read the rendered DOM. The iframe is still isolated in every other direction (no `allow-top-navigation`, no `allow-popups`, scripts cannot reach the parent's `window`).
+- **React sandbox** uses `react-live`, which transpiles JSX in the browser via @babel/standalone. It is functional but adds ~200 KB to the M2 lecture bundle. A lighter alternative (a hand-written JSX-to-createElement playground) could be substituted in a future round.
+- **The 100-mark end-semester paper is not in this milestone**, per the master specification.
 - **Lint** — `next lint` is removed in Next 16. ESLint flat config is the replacement and was not configured in this milestone. The TypeScript strict mode is the primary safety net.
-- **No automated E2E in this final pass** — Playwright was used interactively to verify each fix; the spec file from the earlier checkpoint is committed but not part of the final CI loop.
+- **Playwright E2E** is configured and passes (26 tests). Tests are serial to avoid dev-server load issues during local development; a CI run with a built `next start` would handle parallelism fine.
 
 ## Final commit graph
 
 ```
+5820f8a docs: update content audit to include Module 2
+b5ab0fe test: add Module 2 lecture tests; serialize for stable dev-server handling
+<earlier> feat: add Module 2 (React) with 10 lectures and React exercise runner
+<earlier> feat: replace 3d with jhammann/sakura petals, deepen content, fix sandbox
 464da4a chore: checkpoint before final visual enhancement
-<this commit> feat: replace 3d with jhammann/sakura petals, deepen content, fix sandbox
+deecf20 Initial commit from Create Next App
 ```
