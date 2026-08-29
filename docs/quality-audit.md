@@ -1,4 +1,4 @@
-# Zen Atlas — Quality Audit
+# Kōdo — Quality Audit
 
 Technical verification of the application at the end of this milestone.
 

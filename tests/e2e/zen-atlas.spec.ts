@@ -1,5 +1,5 @@
 /**
- * Playwright E2E tests for Zen Atlas.
+ * Playwright E2E tests for Kōdo.
  *
  * Run with:  npx playwright test
  *
@@ -24,7 +24,7 @@ const LECTURES = ["m1l01", "m1l02", "m1l03", "m1l04", "m1l05", "m1l06", "m1l07",
 test.describe("Navigation", () => {
   test("Homepage loads and shows the studio heading", async ({ page }) => {
     await page.goto("/");
-    await expect(page).toHaveTitle(/Zen Atlas/);
+    await expect(page).toHaveTitle(/Kōdo/);
     await expect(page.getByRole("heading", { name: /A studio for the web/i })).toBeVisible();
   });
 

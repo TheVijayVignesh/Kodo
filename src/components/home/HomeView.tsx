@@ -53,7 +53,12 @@ export function HomeView() {
           >
             <div className="flex items-center gap-3 mb-7">
               <span className="seal text-2xl w-12 h-12" aria-hidden>禅</span>
-              <div className="text-eyebrow text-fg-faint">Zen Atlas · CS3005</div>
+              <div>
+                <div className="font-display text-2xl tracking-tight text-fg-strong leading-none">
+                  Kōdo <span className="text-fg-faint font-jp text-xl ml-1">コード</span>
+                </div>
+                <div className="text-eyebrow text-fg-faint mt-1">CS3005 · Web Technologies Learning Studio</div>
+              </div>
             </div>
             <h1 className="headline-display">
               A studio for the web
@@ -86,12 +91,25 @@ export function HomeView() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl"
+            className="mt-14 max-w-3xl"
           >
-            <Stat label="Lectures" value={String(allIds.length)} />
-            <Stat label="Exercises" value={String(totalExercises)} />
-            <Stat label="Completed" value={`${allCompleted} / ${allIds.length}`} />
-            <Stat label="Module 2 progress" value={`${m2Pct}%`} />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <Stat label="Lectures" value={String(allIds.length)} />
+              <Stat label="Exercises" value={String(totalExercises)} />
+              <Stat label="Completed" value={`${allCompleted} / ${allIds.length}`} />
+              <Stat label="Module 2 progress" value={`${m2Pct}%`} />
+            </div>
+            <div className="mt-3 flex items-center justify-between text-[11px] text-fg-faint">
+              <span>Your progress is stored in this browser only.</span>
+              <button
+                onClick={() => {
+                  if (window.confirm("Reset all progress? This cannot be undone.")) resetAll();
+                }}
+                className="hover:text-[var(--vermilion-500)] transition-colors"
+              >
+                Reset all progress
+              </button>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -166,16 +184,11 @@ export function HomeView() {
           </Link>
         </div>
 
-        <div className="mt-10 flex items-center justify-between text-xs text-fg-faint">
-          <span>Your progress is stored in this browser only.</span>
-          <button
-            onClick={() => {
-              if (window.confirm("Reset all progress? This cannot be undone.")) resetAll();
-            }}
-            className="hover:text-[var(--vermilion-500)] transition-colors"
-          >
-            Reset all progress
-          </button>
+        <div className="mt-20 flex flex-col items-center gap-2 text-center">
+          <div className="seal text-2xl w-12 h-12" aria-hidden>禅</div>
+          <div className="font-display text-lg text-fg-strong tracking-tight">
+            Kōdo <span className="text-fg-faint font-jp ml-1">コード</span>
+          </div>
         </div>
       </section>
     </div>

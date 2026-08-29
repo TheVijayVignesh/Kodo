@@ -2,7 +2,7 @@ import { SOURCES } from "@/lib/curriculum/sources";
 import { BookOpen, Library, ExternalLink, FileText, Globe, BookMarked } from "lucide-react";
 
 export const metadata = {
-  title: "Sources — Zen Atlas",
+  title: "Sources — Kōdo",
   description: "Course materials, MDN references, official React documentation, and other sources that informed each page.",
 };
 

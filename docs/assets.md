@@ -1,4 +1,4 @@
-# Zen Atlas — Asset Manifest
+# Kōdo — Asset Manifest
 
 Every external visual asset used in the application, with source, license, attribution, and where it appears.
 

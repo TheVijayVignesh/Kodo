@@ -24,10 +24,10 @@ export function SiteNav() {
           <Link href="/" className="flex items-center gap-3 group" onClick={() => setOpen(false)}>
             <span className="seal" aria-hidden>禅</span>
             <span className="font-display text-[1.05rem] tracking-tight text-fg-strong">
-              Zen Atlas
+              Kōdo
             </span>
-            <span className="hidden md:inline text-eyebrow ml-1 group-hover:text-fg-base transition-colors">
-              Web Technologies
+            <span className="hidden md:inline text-eyebrow ml-1 text-fg-faint group-hover:text-fg-base transition-colors">
+              <span className="font-jp">コード</span>
             </span>
           </Link>
 

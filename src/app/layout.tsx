@@ -4,7 +4,6 @@ import "./globals.css";
 import { SakuraLayer } from "@/components/visuals/SakuraLayer";
 import { AmbientBackdrop } from "@/components/visuals/AmbientBackdrop";
 import { SiteNav } from "@/components/nav/SiteNav";
-import { SiteFooter } from "@/components/nav/SiteFooter";
 import { ThemeScript } from "@/components/system/ThemeScript";
 
 const display = Spectral({
@@ -43,11 +42,11 @@ const serifJp = Noto_Serif_JP({
 });
 
 export const metadata: Metadata = {
-  title: "Zen Atlas — Web Technologies Learning Studio",
+  title: "Kōdo — Web Technologies Learning Studio",
   description:
     "An interactive learning environment for CS3005 Web Technologies. HTML, CSS, JavaScript, DOM, AJAX, and React taught through real code, real checkers, and a calm Japanese editorial aesthetic.",
-  applicationName: "Zen Atlas",
-  authors: [{ name: "Zen Atlas Studio" }],
+  applicationName: "Kōdo",
+  authors: [{ name: "Kōdo Studio" }],
   keywords: [
     "Web Technologies",
     "HTML",
@@ -79,7 +78,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <div className="relative z-10 flex min-h-screen flex-col">
           <SiteNav />
           <main className="flex-1">{children}</main>
-          <SiteFooter />
         </div>
       </body>
     </html>

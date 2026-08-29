@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Compass } from "lucide-react";
 
-export const metadata = { title: "Not found — Zen Atlas" };
+export const metadata = { title: "Not found — Kōdo" };
 
 export default function NotFound() {
   return (

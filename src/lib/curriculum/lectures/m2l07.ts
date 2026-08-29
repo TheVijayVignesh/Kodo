@@ -85,7 +85,7 @@ function Counter({ limit }) {
 `function DocumentTitle({ title }) {
   useEffect(() => {
     document.title = title;
-    return () => { document.title = 'Zen Atlas'; };
+    return () => { document.title = 'Kōdo'; };
   }, [title]);
 
   return <p>Look at the browser tab.</p>;

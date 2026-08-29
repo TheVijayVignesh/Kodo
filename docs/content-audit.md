@@ -1,4 +1,4 @@
-# Zen Atlas — Content Audit
+# Kōdo — Content Audit
 
 Audit of all educational material delivered in this milestone.
 
