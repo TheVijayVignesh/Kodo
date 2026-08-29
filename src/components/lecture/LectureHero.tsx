@@ -6,7 +6,7 @@ import { CheckCircle2, Clock, ArrowRight, Bookmark, BookmarkCheck } from "lucide
 import type { Lecture } from "@/lib/curriculum/types";
 import { useAppStore } from "@/lib/store";
 import { nextLecture, lectureProgressPct } from "@/lib/curriculum/progress";
-import { EXERCISE_COUNT_BY_LECTURE } from "@/lib/curriculum/m1";
+import { EXERCISE_COUNT_BY_LECTURE } from "@/lib/curriculum/lectures/index";
 
 const KANJI_BY_LECTURE: Record<string, string> = {
   m1l01: "序",

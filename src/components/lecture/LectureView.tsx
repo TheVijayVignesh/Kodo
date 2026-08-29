@@ -8,7 +8,7 @@ import { SectionRenderer } from "@/components/lecture/SectionRenderer";
 import { LectureHero } from "@/components/lecture/LectureHero";
 import { useAppStore } from "@/lib/store";
 import { nextLecture, prevLecture, lectureProgressPct } from "@/lib/curriculum/progress";
-import { EXERCISE_COUNT_BY_LECTURE, LECTURE_BY_ID } from "@/lib/curriculum/m1";
+import { EXERCISE_COUNT_BY_LECTURE, LECTURE_BY_ID } from "@/lib/curriculum/lectures/index";
 import type { Lecture } from "@/lib/curriculum/types";
 
 export function LectureView({ lecture }: { lecture: Lecture }) {

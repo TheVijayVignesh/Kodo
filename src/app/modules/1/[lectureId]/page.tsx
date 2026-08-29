@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { LECTURE_BY_ID } from "@/lib/curriculum/m1";
+import { LECTURE_BY_ID } from "@/lib/curriculum/lectures/index";
 import { LectureView } from "@/components/lecture/LectureView";
 
 export default async function Page({ params }: PageProps<"/modules/1/[lectureId]">) {

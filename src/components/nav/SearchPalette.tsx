@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Search, X, BookOpen, FileText, GraduationCap, Code2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LECTURE_BY_ID, MODULE_1 } from "@/lib/curriculum/m1";
+import { LECTURE_BY_ID, MODULE_1 } from "@/lib/curriculum/lectures/index";
 import { PAPER_BY_ID } from "@/lib/exam/papers";
 
 type Hit = {

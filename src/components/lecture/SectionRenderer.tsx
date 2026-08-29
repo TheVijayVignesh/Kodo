@@ -8,8 +8,9 @@ import { Diagram } from "./Diagram";
 import { InteractiveHost } from "./InteractiveHost";
 import { QuizPanel } from "@/components/quiz/QuizPanel";
 import { CodePlayground } from "@/components/playground/CodePlayground";
+import { ReactExerciseLookup } from "./interactives/ReactExerciseLookup";
 import { useAppStore } from "@/lib/store";
-import { QUIZ_BY_ID, EXERCISE_BY_ID } from "@/lib/curriculum/m1";
+import { QUIZ_BY_ID, EXERCISE_BY_ID, REACT_EXERCISE_BY_ID } from "@/lib/curriculum/lectures/index";
 
 export function SectionRenderer({ sections, lectureId }: { sections: Section[]; lectureId: string }) {
   return (
@@ -180,6 +181,22 @@ function SectionBlock({ section, lectureId }: { section: Section; lectureId: str
         </div>
         {section.description && <p className="body-prose text-fg-muted">{section.description}</p>}
         <CodePlayground exercise={ex} />
+      </div>
+    );
+  }
+  if (section.type === "react-exercise") {
+    const ex = REACT_EXERCISE_BY_ID[section.exerciseId];
+    if (!ex) {
+      return <div className="text-fg-faint text-sm">React exercise {section.exerciseId} not found.</div>;
+    }
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-eyebrow text-fg-faint">
+          <PenLine size={12} />
+          React exercise
+        </div>
+        {section.description && <p className="body-prose text-fg-muted">{section.description}</p>}
+        <ReactExerciseLookup exerciseId={section.exerciseId} />
       </div>
     );
   }

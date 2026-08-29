@@ -5,28 +5,41 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, FileText, Layers, Compass, PenLine, Sparkles, GraduationCap, Library, CheckCircle2 } from "lucide-react";
 import { useAppStore } from "@/lib/store";
-import { MODULE_1, EXERCISE_COUNT_BY_LECTURE } from "@/lib/curriculum/m1";
+import { MODULE_1, MODULE_2, EXERCISE_COUNT_BY_LECTURE, REACT_EXERCISE_COUNT_BY_LECTURE } from "@/lib/curriculum/lectures/index";
 import { getModuleProgress, getLectureStatus, lectureProgressPct } from "@/lib/curriculum/progress";
 import type { LectureId } from "@/lib/curriculum/types";
 
 const EX_COUNTS = EXERCISE_COUNT_BY_LECTURE;
+const RE_COUNTS = REACT_EXERCISE_COUNT_BY_LECTURE;
 
 export function HomeView() {
   const progress = useAppStore((s) => s.progress);
-  const bookmarks = useAppStore((s) => s.bookmarks);
   const resetAll = useAppStore((s) => s.resetAll);
-  const ids = MODULE_1.lectures.map((l) => l.id) as LectureId[];
-  const modulePct = getModuleProgress(progress as any, ids, EX_COUNTS);
-  const completedCount = ids.filter((id) => progress[id]?.completed).length;
+  const allIds = [
+    ...MODULE_1.lectures.map((l) => l.id),
+    ...MODULE_2.lectures.map((l) => l.id),
+  ] as LectureId[];
+  const totalExercises =
+    Object.values(EX_COUNTS).reduce((a, b) => a + b, 0) +
+    Object.values(RE_COUNTS).reduce((a, b) => a + b, 0);
+
+  const m1Ids = MODULE_1.lectures.map((l) => l.id) as LectureId[];
+  const m2Ids = MODULE_2.lectures.map((l) => l.id) as LectureId[];
+  const m1Pct = getModuleProgress(progress as any, m1Ids, EX_COUNTS);
+  const m2Pct = getModuleProgress(progress as any, m2Ids, RE_COUNTS);
+  const m1Completed = m1Ids.filter((id) => progress[id]?.completed).length;
+  const m2Completed = m2Ids.filter((id) => progress[id]?.completed).length;
+  const allCompleted = m1Completed + m2Completed;
+
   const lastVisited = useMemo(() => {
-    return ids
+    return allIds
       .filter((id) => progress[id]?.lastVisitedAt)
       .sort((a, b) => (progress[b].lastVisitedAt! - progress[a].lastVisitedAt!))[0];
-  }, [progress, ids]);
+  }, [progress, allIds]);
   const recommended = useMemo(() => {
     if (lastVisited) return lastVisited;
-    return ids.find((id) => !progress[id]?.completed) ?? ids[0];
-  }, [lastVisited, progress, ids]);
+    return allIds.find((id) => !progress[id]?.completed) ?? allIds[0];
+  }, [lastVisited, progress, allIds]);
 
   return (
     <div>
@@ -72,10 +85,10 @@ export function HomeView() {
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl"
           >
-            <Stat label="Lectures" value={String(MODULE_1.lectures.length)} />
-            <Stat label="Exercises" value={String(Object.values(EX_COUNTS).reduce((a, b) => a + b, 0))} />
-            <Stat label="Completed" value={`${completedCount} / ${MODULE_1.lectures.length}`} />
-            <Stat label="Module 1 progress" value={`${modulePct}%`} />
+            <Stat label="Lectures" value={String(allIds.length)} />
+            <Stat label="Exercises" value={String(totalExercises)} />
+            <Stat label="Completed" value={`${allCompleted} / ${allIds.length}`} />
+            <Stat label="Module 2 progress" value={`${m2Pct}%`} />
           </motion.div>
         </div>
       </section>
@@ -86,15 +99,25 @@ export function HomeView() {
             <div className="flex items-center justify-between mb-5">
               <div>
                 <div className="text-eyebrow text-fg-faint">Continue learning</div>
-                <h2 className="headline-lg mt-1">{MODULE_1.lectures.find((l) => l.id === recommended)?.title}</h2>
+                <h2 className="headline-lg mt-1">
+                  {[...MODULE_1.lectures, ...MODULE_2.lectures].find((l) => l.id === recommended)?.title}
+                </h2>
               </div>
               <Link href={`/modules/1/${recommended}`} className="btn btn-primary">
                 Resume <ArrowRight size={14} />
               </Link>
             </div>
-            <ProgressBar value={lectureProgressPct(recommended, { [recommended]: progress[recommended] } as any, EX_COUNTS[recommended])} />
+            <ProgressBar
+              value={lectureProgressPct(
+                recommended,
+                { [recommended]: progress[recommended] } as any,
+                recommended.startsWith("m1")
+                  ? EX_COUNTS[recommended as keyof typeof EX_COUNTS]
+                  : RE_COUNTS[recommended] ?? 0
+              )}
+            />
             <p className="text-fg-muted mt-3 text-sm leading-relaxed">
-              {MODULE_1.lectures.find((l) => l.id === recommended)?.subtitle}
+              {[...MODULE_1.lectures, ...MODULE_2.lectures].find((l) => l.id === recommended)?.subtitle}
             </p>
           </div>
 
@@ -128,15 +151,15 @@ export function HomeView() {
             <div className="headline-md text-fg-strong">Module 1</div>
             <p className="text-fg-muted text-sm mt-1 leading-relaxed">Web foundations. The platform, the document tree, the network. Nine lectures.</p>
           </Link>
+          <Link href="/modules/2" className="paper p-5 hover:border-[var(--accent)] transition-colors">
+            <PenLine size={20} className="text-[var(--accent)] mb-3" />
+            <div className="headline-md text-fg-strong">Module 2</div>
+            <p className="text-fg-muted text-sm mt-1 leading-relaxed">React. Components, props, state, hooks, routing, and a design system. Ten lectures.</p>
+          </Link>
           <Link href="/exam" className="paper p-5 hover:border-[var(--accent)] transition-colors">
             <FileText size={20} className="text-[var(--accent)] mb-3" />
             <div className="headline-md text-fg-strong">Exam Hall</div>
             <p className="text-fg-muted text-sm mt-1 leading-relaxed">The original 50-mark paper and a generated practice paper, with solutions you can reveal.</p>
-          </Link>
-          <Link href="/sources" className="paper p-5 hover:border-[var(--accent)] transition-colors">
-            <Library size={20} className="text-[var(--accent)] mb-3" />
-            <div className="headline-md text-fg-strong">Research sources</div>
-            <p className="text-fg-muted text-sm mt-1 leading-relaxed">Course slides, MDN references, and the official React documentation that informed each page.</p>
           </Link>
         </div>
 

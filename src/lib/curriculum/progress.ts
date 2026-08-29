@@ -1,4 +1,5 @@
-import { MODULE_1, LECTURE_BY_ID, type LectureId } from "@/lib/curriculum/lectures";
+import { MODULE_1, LECTURE_BY_ID } from "@/lib/curriculum/lectures/index";
+import type { LectureId } from "@/lib/curriculum/types";
 
 export type NodeStatus = "locked" | "available" | "in_progress" | "completed";
 

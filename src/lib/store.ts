@@ -3,7 +3,9 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 export type LectureId =
   | "m1l01" | "m1l02" | "m1l03" | "m1l04" | "m1l05"
-  | "m1l06" | "m1l07" | "m1l08" | "m1l09";
+  | "m1l06" | "m1l07" | "m1l08" | "m1l09"
+  | "m2l01" | "m2l02" | "m2l03" | "m2l04" | "m2l05"
+  | "m2l06" | "m2l07" | "m2l08" | "m2l09" | "m2l10";
 
 export type LectureProgress = {
   visited: boolean;
@@ -64,6 +66,16 @@ const initialProgress: Record<LectureId, LectureProgress> = {
   m1l07: { ...emptyProgress },
   m1l08: { ...emptyProgress },
   m1l09: { ...emptyProgress },
+  m2l01: { ...emptyProgress },
+  m2l02: { ...emptyProgress },
+  m2l03: { ...emptyProgress },
+  m2l04: { ...emptyProgress },
+  m2l05: { ...emptyProgress },
+  m2l06: { ...emptyProgress },
+  m2l07: { ...emptyProgress },
+  m2l08: { ...emptyProgress },
+  m2l09: { ...emptyProgress },
+  m2l10: { ...emptyProgress },
 };
 
 export const useAppStore = create<State>()(

@@ -8,6 +8,8 @@ import { TypeInspector } from "./interactives/TypeInspector";
 import { ObjectLab } from "./interactives/ObjectLab";
 import { DomLab } from "./interactives/DomLab";
 import { AjaxClient } from "./interactives/AjaxClient";
+import { ReactSandbox } from "./interactives/ReactSandbox";
+import { ReactExerciseLookup } from "./interactives/ReactExerciseLookup";
 
 type AnyComponent = (props: any) => React.ReactElement | null;
 
@@ -20,6 +22,8 @@ const REGISTRY: Record<string, AnyComponent> = {
   ObjectLab: ObjectLab as AnyComponent,
   DomLab: DomLab as AnyComponent,
   AjaxClient: AjaxClient as AnyComponent,
+  ReactSandbox: ReactSandbox as AnyComponent,
+  ReactExercise: ReactExerciseLookup as AnyComponent,
 };
 
 export function InteractiveHost({ componentKey }: { componentKey: string }) {

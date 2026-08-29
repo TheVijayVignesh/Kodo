@@ -7,7 +7,9 @@ import type { ReactNode } from "react";
 
 export type LectureId =
   | "m1l01" | "m1l02" | "m1l03" | "m1l04" | "m1l05"
-  | "m1l06" | "m1l07" | "m1l08" | "m1l09";
+  | "m1l06" | "m1l07" | "m1l08" | "m1l09"
+  | "m2l01" | "m2l02" | "m2l03" | "m2l04" | "m2l05"
+  | "m2l06" | "m2l07" | "m2l08" | "m2l09" | "m2l10";
 
 export type Section =
   | { type: "context"; body: string }
@@ -18,6 +20,7 @@ export type Section =
   | { type: "example"; title: string; code: string; language: "html" | "css" | "js" | "ts" | "tsx" | "text"; walkthrough: string; runnable?: boolean }
   | { type: "mistakes"; title?: string; items: { mistake: string; fix: string }[] }
   | { type: "interactive"; componentKey: string; title?: string; description?: string }
+  | { type: "react-exercise"; exerciseId: string; title?: string; description?: string }
   | { type: "exercise"; exerciseId: string; title?: string; description?: string }
   | { type: "quiz"; quizId: string; title?: string }
   | { type: "summary"; body: string };
@@ -100,6 +103,25 @@ export type Exercise = {
   solutionExplanation: string;
 };
 
+export type ReactTestSpec =
+  | { kind: "renders-element"; selector: string; min?: number; description: string }
+  | { kind: "contains-text"; selector: string; text: string; description: string }
+  | { kind: "has-class"; selector: string; className: string; description: string }
+  | { kind: "no-error"; description: string };
+
+export type ReactExercise = {
+  id: string;
+  lectureId: string; // m2l01..m2l10
+  title: string;
+  brief: string;
+  starterCode: string;
+  tests: ReactTestSpec[];
+  hints: string[];
+  solution: string;
+  solutionExplanation: string;
+  scope?: { [importName: string]: unknown };
+};
+
 export type Lecture = {
   id: LectureId;
   module: 1 | 2;
@@ -110,7 +132,7 @@ export type Lecture = {
   difficulty: "foundational" | "core" | "applied" | "advanced";
   objectives: string[];
   sections: Section[];
-  sources: { label: string; url?: string; type: "course" | "mdn" | "react" | "w3c" | "book" }[];
+  sources: { label: string; url?: string; type: "course" | "mdn" | "react" | "react-docs" | "w3c" | "book" }[];
   prerequisites: LectureId[];
 };
 
