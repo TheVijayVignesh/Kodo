@@ -8,7 +8,7 @@ import { SectionRenderer } from "@/components/lecture/SectionRenderer";
 import { LectureHero } from "@/components/lecture/LectureHero";
 import { useAppStore } from "@/lib/store";
 import { nextLecture, prevLecture, lectureProgressPct } from "@/lib/curriculum/progress";
-import { EXERCISE_COUNT_BY_LECTURE } from "@/lib/curriculum/m1";
+import { EXERCISE_COUNT_BY_LECTURE, LECTURE_BY_ID } from "@/lib/curriculum/m1";
 import type { Lecture } from "@/lib/curriculum/types";
 
 export function LectureView({ lecture }: { lecture: Lecture }) {
@@ -33,14 +33,18 @@ export function LectureView({ lecture }: { lecture: Lecture }) {
         <SectionRenderer sections={lecture.sections} lectureId={lecture.id} />
       </div>
 
-      <SourcesBlock sources={lecture.sources} />
+      <div className="mt-20">
+        <SourcesBlock sources={lecture.sources} />
+      </div>
 
-      <CompletionBar
-        completed={!!progress?.completed}
-        pct={pct}
-        onComplete={() => markComplete(lecture.id)}
-        onReset={() => resetLecture(lecture.id)}
-      />
+      <div className="mt-12">
+        <CompletionBar
+          completed={!!progress?.completed}
+          pct={pct}
+          onComplete={() => markComplete(lecture.id)}
+          onReset={() => resetLecture(lecture.id)}
+        />
+      </div>
 
       <LectureFooter prev={prev} next={next} />
     </div>
@@ -50,7 +54,7 @@ export function LectureView({ lecture }: { lecture: Lecture }) {
 function SourcesBlock({ sources }: { sources: Lecture["sources"] }) {
   if (!sources?.length) return null;
   return (
-    <section className="container-prose mt-16">
+    <section className="container-prose">
       <div className="ink-divider" />
       <div className="text-eyebrow text-fg-faint mb-3 flex items-center gap-2">
         <BookOpen size={12} />
@@ -80,7 +84,7 @@ function SourcesBlock({ sources }: { sources: Lecture["sources"] }) {
 
 function CompletionBar({ completed, pct, onComplete, onReset }: { completed: boolean; pct: number; onComplete: () => void; onReset: () => void }) {
   return (
-    <section className="container-prose mt-16">
+    <section className="container-prose">
       <div className="paper p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="text-eyebrow text-fg-faint">Lecture completion</div>
@@ -108,31 +112,56 @@ function CompletionBar({ completed, pct, onComplete, onReset }: { completed: boo
 }
 
 function LectureFooter({ prev, next }: { prev: string | null; next: string | null }) {
+  const prevTitle = prev ? LECTURE_BY_ID[prev as keyof typeof LECTURE_BY_ID]?.title : null;
+  const nextTitle = next ? LECTURE_BY_ID[next as keyof typeof LECTURE_BY_ID]?.title : null;
+
   return (
-    <section className="container-zen mt-12">
+    <section className="container-zen mt-16 mb-12">
+      <div className="text-eyebrow text-fg-faint mb-4 flex items-center gap-2">
+        <span>Continue the path</span>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {prev ? (
-          <Link href={`/modules/1/${prev}`} className="paper p-4 flex items-center justify-between gap-3 group">
-            <div>
-              <div className="text-eyebrow text-fg-faint">Previous</div>
-              <div className="text-fg-base group-hover:text-fg-strong transition-colors">← Earlier lecture</div>
+          <Link
+            href={`/modules/1/${prev}`}
+            className="paper p-5 md:p-6 flex items-center justify-between gap-4 group transition-colors hover:border-[var(--accent)]"
+          >
+            <div className="flex items-center gap-4 min-w-0">
+              <ArrowLeft size={18} className="text-fg-faint group-hover:text-[var(--accent)] shrink-0" />
+              <div className="min-w-0">
+                <div className="text-eyebrow text-fg-faint mb-1">Previous</div>
+                <div className="font-display text-fg-strong text-base md:text-lg truncate">
+                  {prevTitle ?? "Earlier lecture"}
+                </div>
+              </div>
             </div>
-            <ArrowLeft size={16} className="text-fg-faint group-hover:text-fg-base" />
-          </Link>
-        ) : <div />}
-        {next ? (
-          <Link href={`/modules/1/${next}`} className="paper p-4 flex items-center justify-between gap-3 group text-right md:text-left">
-            <div>
-              <div className="text-eyebrow text-fg-faint">Next</div>
-              <div className="text-fg-base group-hover:text-fg-strong transition-colors">Upcoming lecture →</div>
-            </div>
-            <ArrowRight size={16} className="text-fg-faint group-hover:text-fg-base" />
           </Link>
         ) : (
-          <div className="paper p-4 flex items-center justify-between gap-3 opacity-60">
+          <div className="paper p-5 md:p-6 opacity-50">
+            <div className="text-eyebrow text-fg-faint">Start of Module 1</div>
+            <div className="font-display text-fg-base">This is the first lecture.</div>
+          </div>
+        )}
+        {next ? (
+          <Link
+            href={`/modules/1/${next}`}
+            className="paper p-5 md:p-6 flex items-center justify-between gap-4 group transition-colors hover:border-[var(--accent)]"
+          >
+            <div className="flex items-center gap-4 min-w-0 flex-1 justify-end text-right">
+              <div className="min-w-0">
+                <div className="text-eyebrow text-fg-faint mb-1">Next</div>
+                <div className="font-display text-fg-strong text-base md:text-lg truncate">
+                  {nextTitle ?? "Upcoming lecture"}
+                </div>
+              </div>
+              <ArrowRight size={18} className="text-fg-faint group-hover:text-[var(--accent)] shrink-0" />
+            </div>
+          </Link>
+        ) : (
+          <div className="paper p-5 md:p-6 flex items-center justify-between gap-3 opacity-60">
             <div>
-              <div className="text-eyebrow text-fg-faint">End of module</div>
-              <div className="text-fg-base">This is the last lecture in Module 1.</div>
+              <div className="text-eyebrow text-fg-faint">End of Module 1</div>
+              <div className="font-display text-fg-base">This is the last lecture.</div>
             </div>
             <GraduationCap size={16} className="text-fg-faint" />
           </div>

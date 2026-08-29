@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Spectral, Inter_Tight, JetBrains_Mono, Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
+import { SakuraLayer } from "@/components/visuals/SakuraLayer";
 import { AmbientBackdrop } from "@/components/visuals/AmbientBackdrop";
 import { SiteNav } from "@/components/nav/SiteNav";
 import { SiteFooter } from "@/components/nav/SiteFooter";
@@ -70,8 +71,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <ThemeScript />
+        <link rel="stylesheet" href="/sakura.min.css" />
       </head>
       <body className="min-h-screen relative">
+        <SakuraLayer />
         <AmbientBackdrop />
         <div className="relative z-10 flex min-h-screen flex-col">
           <SiteNav />

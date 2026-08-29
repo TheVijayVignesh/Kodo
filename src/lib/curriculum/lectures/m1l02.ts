@@ -7,15 +7,15 @@ export const lecture: Lecture = {
   title: "HTML",
   subtitle:
     "Hypertext, markup, and the structure that holds every web page together. Why HTML is the floor plan and not the paint.",
-  estimatedMinutes: 40,
+  estimatedMinutes: 45,
   difficulty: "foundational",
   prerequisites: ["m1l01"],
   objectives: [
-    "Define HTML as a declarative, tag-based language for describing document structure.",
-    "Identify the parts of a minimal HTML5 document — doctype, html, head, body — and what each is for.",
+    "Read a minimal HTML5 document and explain the role of the doctype, html, head, and body.",
     "Use headings, paragraphs, lists, links, images, and tables correctly.",
     "Distinguish semantic elements (header, nav, main, article, section, footer) from generic containers like div and span.",
-    "Build a small, valid HTML page with meaningful structure.",
+    "Build a valid, accessible HTML page with meaningful structure.",
+    "Recognise the difference between block and inline elements and when nesting rules apply.",
   ],
   sources: [
     { label: "Course slides — HTML", type: "course" },
@@ -52,8 +52,6 @@ export const lecture: Lecture = {
       title: "Anatomy of a minimal document",
       body:
         "Every HTML5 document starts with the same skeleton. The <!doctype html> declaration tells the browser this is an HTML5 file (it is not a tag, despite the angle brackets). The <html> element wraps the whole document. Inside, <head> contains metadata and links to resources the document needs. <body> contains the visible content. A <title> inside <head> sets the browser tab text and is also the default bookmark name.",
-      mentalModel:
-        "If the document is a book, <head> is the title page and copyright page, and <body> is the actual content. <!doctype> is the convention on the cover that says what edition this is.",
       example: {
         language: "html",
         code:
@@ -71,6 +69,8 @@ export const lecture: Lecture = {
 </html>`,
         caption: "A minimal HTML5 document. Save as .html and open in any browser.",
       },
+      walkthrough:
+        "The lang attribute on <html> is not decorative. Screen readers and translation tools use it to pick the right voice and dictionary. Setting it on every page is the cheapest accessibility improvement you can make. The <meta charset=\"utf-8\"> line tells the browser to interpret the file as UTF-8 — without it, special characters can break in surprising ways.",
       pitfall:
         "Forgetting the lang attribute on <html> removes a piece of information that screen readers and translation tools rely on. Set it on every page, even a one-off demo.",
     },
@@ -80,7 +80,7 @@ export const lecture: Lecture = {
       body:
         "A tag is the markup between angle brackets: <p>. An element is the tag plus its content plus the closing tag: <p>A paragraph.</p>. Some elements have no content and no closing tag — these are void elements. They are written as a single tag: <br>, <hr>, <img>, <input>, <meta>, <link>. Writing <br></br> is wrong and will trip up a strict parser.",
       mentalModel:
-        "Tag is the marker. Element is the marker plus what it marks.",
+        "A tag is the marker. An element is the marker plus what it marks.",
       pitfall:
         "Some elements are not void but are often written that way. <script src=\"...\"></script> needs a closing tag, even if the content is empty. <input> is void; <textarea> is not.",
     },
@@ -97,6 +97,8 @@ export const lecture: Lecture = {
 <input type="email" name="contact" required placeholder="you@example.com">`,
         caption: "Attributes are name/value pairs in the opening tag. The values are quoted.",
       },
+      walkthrough:
+        "On the <a>, href names the destination. target=\"_blank\" opens the link in a new tab. rel=\"noopener\" is a security measure that prevents the new tab from manipulating the original page through window.opener. The <img> uses alt for the alternative text, and explicit width and height to prevent layout shift while the image loads. The <input> uses type=\"email\" so mobile keyboards show the @ key, and required so the form refuses to submit empty.",
     },
     {
       type: "concept",
@@ -113,6 +115,11 @@ export const lecture: Lecture = {
         "HTML5 introduced a set of elements that describe the role of a chunk of content. <header> introduces a page or a section. <nav> holds navigation links. <main> contains the unique content of the page. <article> wraps a self-contained piece (a blog post, a card). <section> groups related content under a heading. <aside> holds content tangentially related to what surrounds it. <footer> closes a page or a section.",
       mentalModel:
         "The browser does not render <article> any differently from <div> by default. The value is in what the tag tells assistive technology, search engines, and your future self about the role of that part of the page.",
+    },
+    {
+      type: "diagram",
+      kind: "dom-tree",
+      caption: "The DOM: each semantic element is a node, and the tree says what role each part plays.",
     },
     {
       type: "example",
@@ -176,31 +183,31 @@ export const lecture: Lecture = {
         {
           mistake: "Skipping the alt attribute on <img>.",
           fix:
-            "Every image has an alt. If the image is purely decorative, write alt=\"\". Otherwise, describe what the image communicates in context.",
+            "Every image has an alt. If the image is purely decorative, write alt=\"\". Otherwise, describe what the image communicates in context. Screen readers will read alt aloud when they reach the image.",
         },
         {
           mistake: "Multiple <h1>s on a page.",
           fix:
-            "Use one <h1> per page, and step down through the heading levels without skipping. <h1> → <h2> → <h3> is the pattern. Avoid <h1> → <h4>.",
+            "Use one <h1> per page, and step down through the heading levels without skipping. <h1> → <h2> → <h3> is the pattern. Avoid <h1> → <h4>. The document outline should be a clean tree.",
         },
         {
           mistake: "Putting block elements inside inline elements.",
           fix:
-            "Inline elements can only contain phrasing content. <p><div>...</div></p> is invalid. Restructure so the block element sits beside or outside the inline one.",
+            "Inline elements can only contain phrasing content. <p><div>...</div></p> is invalid. Restructure so the block element sits beside or outside the inline one. The browser will close the <p> early and your layout will shift in confusing ways.",
         },
         {
           mistake: "Closing void elements.",
           fix:
-            "Don't write <br/>, <img/>, <input/>. The slash is HTML5-XHTML confusion. <br> is enough.",
+            "Don't write <br/>, <img/>, <input/>. The slash is HTML5-XHTML confusion. <br> is enough. The browser is forgiving, but the slash can confuse linters and other tools.",
         },
       ],
     },
     {
       type: "exercise",
       exerciseId: "m1l02-ex01",
-      title: "Build a small content page",
+      title: "A semantic content page",
       description:
-        "Create an HTML page with a header, a navigation, two sections of content, and a footer. The checker inspects the rendered structure.",
+        "Build a small HTML page with a <header>, a <nav>, a <main> containing at least two <section>s, and a <footer>. Use one <h1>, then <h2>s for the section headings. Include a list of links in the nav.",
     },
     {
       type: "quiz",

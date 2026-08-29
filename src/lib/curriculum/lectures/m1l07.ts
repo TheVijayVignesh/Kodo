@@ -56,6 +56,8 @@ export const lecture: Lecture = {
 };`,
         caption: "A simple object. The method is shorthand for `toggle: function() {...}`.",
       },
+      walkthrough:
+        "Every property has a key and a value. Methods are properties whose value is a function. Inside a method, `this` refers to the object the method is called on. The shorthand `toggle() {...}` is the same as writing `toggle: function() {...}`, which is the same as writing `toggle: () => {...}` except that the arrow form does not bind its own `this`.",
     },
     {
       type: "concept",
@@ -74,6 +76,8 @@ task[key] = true;
 task.due = "tomorrow"; // add a property
 delete task.due;       // remove it`,
       },
+      walkthrough:
+        "When the property name comes from a variable, bracket notation is the only option. Use the same syntax for adding, updating, and deleting. There is no difference between 'a property that did not exist' and 'a property whose value is undefined' — the in operator can tell them apart: 'due' in task is true if the key exists, regardless of value.",
     },
     {
       type: "concept",
@@ -122,6 +126,8 @@ const d = structuredClone(a);  // deep copy
 d.nested.y = 999;
 console.log(a.nested.y);  // 200 — the nested object is independent`,
       },
+      walkthrough:
+        "The spread copy shares the nested object. The deep copy does not. Use structuredClone when you have a tree of data and you need a real snapshot. structuredClone is built into the runtime — no library needed.",
     },
     {
       type: "concept",
@@ -137,6 +143,8 @@ Object.keys(task);     // ["id", "title", "done"]
 Object.values(task);   // [1, "Read", false]
 Object.entries(task);  // [["id", 1], ["title", "Read"], ["done", false]]`,
       },
+      walkthrough:
+        "Object.entries is the most useful of the three — it pairs the key with the value, which is what you usually want when you iterate. Object.fromEntries is the inverse: it takes an array of [key, value] pairs and rebuilds an object.",
     },
     {
       type: "concept",
@@ -155,6 +163,8 @@ const parsed = JSON.parse(text);
 // { id: 1, title: "Read", done: false }`,
         caption: "JSON is plain text. It travels in HTTP bodies, in localStorage, in clipboard events. JavaScript objects do not.",
       },
+      walkthrough:
+        "The round trip is lossy: methods disappear, undefined values disappear, dates become strings, and circular references throw. This is why frameworks have their own serialisation formats (Next.js has its own server-component serialiser, for example) for richer data.",
     },
     {
       type: "example",

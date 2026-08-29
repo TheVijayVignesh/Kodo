@@ -12,9 +12,10 @@ export const lecture: Lecture = {
   prerequisites: ["m1l02"],
   objectives: [
     "Use element-level HTML correctly: headings, paragraphs, emphasis, and strong text.",
-    "Build lists (ordered, unordered, description) and tables that work for assistive technology.",
-    "Construct accessible forms with labels, fieldsets, and the right input types.",
-    "Recognise void elements, attribute conventions, and common authoring mistakes.",
+    "Build ordered, unordered, and description lists correctly.",
+    "Build a table that exposes its structure to screen readers.",
+    "Construct a form with labels, fieldsets, and the right input types.",
+    "Identify the structural and accessibility issues in a malformed snippet.",
   ],
   sources: [
     { label: "Course slides — HTML Elements", type: "course" },
@@ -51,8 +52,10 @@ export const lecture: Lecture = {
    the red fox — not the <strong>arctic</strong> or fennec species.</p>`,
         caption: "Use <em> for emphasis and <strong> for stronger importance. Both are inline.",
       },
+      walkthrough:
+        "<em> tells the browser (and assistive technology) that the text should be stressed in speech. <strong> tells the browser the text is more important than its surroundings. Both are inline, so they can sit inside a <p>. The visible style (italics, bold) is just the default — you can change it with CSS without changing the meaning.",
       pitfall:
-        "Use <strong> when the text is genuinely important (a warning), not just because you want it bold. Use <em> when you want a different stress, not just italics. CSS can do either visually without the tag.",
+        "Use <strong> when the text is genuinely important (a warning, a key term), not just because you want it bold. Use <em> when you want a different stress, not just italics. CSS can do either visually without the tag.",
     },
     {
       type: "concept",
@@ -74,8 +77,10 @@ export const lecture: Lecture = {
   <dt>POST /api/tasks</dt>
   <dd>Creates a new task. Expects a JSON body.</dd>
 </dl>`,
-      caption: "Three kinds of list. The structure of the document should reflect the relationship between items.",
+        caption: "Three kinds of list. The structure of the document should reflect the relationship between items.",
       },
+      walkthrough:
+        "Notice the wrapping element changes the meaning: <ul> says \"the order does not matter\", <ol> says \"the order matters\", <dl> says \"each item is a name and a value\". The visible style is the default; the meaning is what assistive technology and search engines see.",
     },
     {
       type: "concept",
@@ -109,6 +114,8 @@ export const lecture: Lecture = {
 </table>`,
         caption: "A table with <caption>, <thead>, <tbody>, and scoped <th> cells.",
       },
+      walkthrough:
+        "<caption> is the table's title. It is associated with the table and is read aloud by screen readers as \"Table: comparing two ways to fetch data\". The scope attribute on each <th> tells the screen reader whether the header applies to a column (scope=\"col\") or a row (scope=\"row\"). Without it, the reader has to guess which cell the header is paired with.",
     },
     {
       type: "concept",
@@ -212,22 +219,17 @@ export const lecture: Lecture = {
         {
           mistake: "Wrapping a checkbox or radio with a <label> that does not contain the input.",
           fix:
-            "Either wrap the input or use for and id. Without the association, clicking the label does not toggle the control.",
+            "Either wrap the input or use for and id. Without the association, clicking the label does not toggle the control. Screen readers also rely on the association to announce the label with the input.",
         },
         {
           mistake: "Using <table> for layout.",
           fix:
-            "Use CSS grid or flexbox. Tables imply a tabular relationship between rows and columns, and screen readers will announce them as such.",
+            "Use CSS grid or flexbox. Tables imply a tabular relationship between rows and columns, and screen readers will announce them as such. Layout tables break the reading order and confuse assistive technology.",
         },
         {
           mistake: "Forgetting the alt attribute on <img>.",
           fix:
-            "Always set alt. Use alt=\"\" for decorative images, and a meaningful description for informative ones.",
-        },
-        {
-          mistake: "Using multiple <h1>s on a page.",
-          fix:
-            "Use one <h1> per page. Step down through heading levels. Skipping from h1 to h4 removes the document outline.",
+            "Always set alt. Use alt=\"\" for decorative images, and a meaningful description for informative ones. Browsers also use alt as a tooltip on hover, so the attribute is useful even for sighted users.",
         },
         {
           mistake: "Using a <button> without a type attribute inside a form.",
@@ -239,7 +241,7 @@ export const lecture: Lecture = {
     {
       type: "exercise",
       exerciseId: "m1l03-ex01",
-      title: "A profile card with a form",
+      title: "Profile card with a form",
       description:
         "Build an HTML fragment with an image, a heading, a list, and a form that has at least two labelled inputs and a submit button.",
     },
@@ -303,7 +305,7 @@ export const quizzes: Quiz[] = [
         ],
         correctIndex: 1,
         explanation:
-          "type=\"email\" gives the user the right keyboard on mobile and drives the browser's built-in format validation.",
+          "type=\"email\" gives the user the right keyboard on mobile and drives the browser's built-in format validation. The browser will refuse to submit if the value does not look like an email address.",
       },
       {
         kind: "mcq",

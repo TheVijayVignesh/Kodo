@@ -55,6 +55,11 @@ export const lecture: Lecture = {
       },
     },
     {
+      type: "diagram",
+      kind: "dom-tree",
+      caption: "The DOM: a tree the browser builds, that CSS matches against, and that JavaScript can navigate.",
+    },
+    {
       type: "concept",
       title: "Selecting elements",
       body:
@@ -70,6 +75,8 @@ allItems.forEach(item => {
   item.classList.add("seen");
 });`,
       },
+      walkthrough:
+        "The NodeList returned by querySelectorAll is static — it does not change as the document changes. If you need a live collection that updates as you add or remove elements, use the older getElementsByClassName or getElementsByTagName. For almost every modern case, querySelectorAll is the right answer.",
     },
     {
       type: "concept",
@@ -109,6 +116,8 @@ link.classList.contains("active");   // true
 
 link.style.color = "#a23a2c";        // inline style`,
       },
+      walkthrough:
+        "setAttribute is the right tool for HTML attributes that do not have a corresponding DOM property (like data-*, aria-*, or custom attributes). For most day-to-day work, classList does what you need and keeps the styling in CSS where it belongs.",
     },
     {
       type: "concept",
@@ -126,6 +135,8 @@ list.appendChild(item);
 // remove
 item.remove();`,
       },
+      walkthrough:
+        "createElement returns a detached node. Set its content and attributes, then attach it to a parent. The parent.appendChild call is what makes it visible — until then it is in memory only. remove() detaches the node from its parent. The node still exists in memory; you can re-attach it later.",
     },
     {
       type: "concept",
@@ -165,8 +176,13 @@ list.addEventListener("click", (e) => {
 });`,
         caption: "This handles clicks on any li inside the list, even ones added after the listener was attached.",
       },
-      pitfall:
-        "If you do not need delegation, calling event.stopPropagation() can prevent the event from bubbling further. But reach for it rarely — usually the right fix is to attach the listener to the right element in the first place.",
+      walkthrough:
+        "Without delegation, you would attach a click handler to every li. With a long list, that is wasteful — and items added after the page loads would not have the handler. Delegation attaches one handler to the parent, checks the target with e.target.matches, and acts on the child. New items work without re-binding.",
+    },
+    {
+      type: "diagram",
+      kind: "event-flow",
+      caption: "An event fires on the target, then bubbles up to its ancestors. Use one listener on a parent to handle many children.",
     },
     {
       type: "example",
@@ -228,7 +244,7 @@ list.addEventListener("click", (e) => {
       exerciseId: "m1l08-ex01",
       title: "Toggle a class on click",
       description:
-        "Write JavaScript that toggles a `done` class on a button each time it is clicked, and updates its text between 'Start' and 'Done'.",
+        "Write JavaScript that finds a button with id 'toggle', and on click toggles a 'done' class on it and switches its text between 'Start' and 'Done'.",
     },
     {
       type: "quiz",

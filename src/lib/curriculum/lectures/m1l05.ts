@@ -42,7 +42,7 @@ export const lecture: Lecture = {
       type: "concept",
       title: "Variables — let, const, and the legacy of var",
       body:
-        "Variables are named bindings. const declares a binding that cannot be reassigned. let declares a binding that can. var is the legacy form: it has function scope (not block scope), allows redeclaration, and is hoisted. In modern code, prefer const by default, use let when you need to reassign, and avoid var entirely unless you are reading an old codebase.",
+        "Variables are named bindings. const declares a binding that cannot be reassigned. let declares a binding that can be. var is the legacy form: it has function scope (not block scope), allows redeclaration, and is hoisted. In modern code, prefer const by default, use let when you need to reassign, and avoid var entirely unless you are reading an old codebase.",
       example: {
         language: "js",
         code:
@@ -58,6 +58,8 @@ console.log(scoped);  // ReferenceError
 console.log(alsoHere); // "leaks out"`,
         caption: "let is block-scoped; var is function-scoped. In modern code, use let or const.",
       },
+      walkthrough:
+        "Inside the if block, `let scoped` lives only inside the braces. `var alsoHere` is hoisted to the top of the function and leaks out. This is the surprise that makes var dangerous — a variable declared deep inside a loop can be visible everywhere in the function.",
       pitfall:
         "const only protects the binding, not the value. const user = { name: 'A' }; user.name = 'B' is still legal. const means \"the variable will keep pointing to this object\" — not \"this object is frozen.\"",
     },
@@ -82,6 +84,8 @@ typeof []        // "object"
 null == undefined  // true
 null === undefined // false`,
       },
+      walkthrough:
+        "The typeof null quirk has been preserved for compatibility with code written in 1995. The strict equality operator === avoids the surprises of == but loses the one useful case: x == null is the idiomatic way to check for either null or undefined in a single expression.",
     },
     {
       type: "concept",
@@ -103,6 +107,8 @@ const upper = items.map(item => item.toUpperCase());
 const short = items.filter(item => item.length <= 4);
 // ["tea", "rice"]`,
       },
+      walkthrough:
+        "map returns a new array of the same length with each item transformed. filter returns a new array of items that pass the test. Both are pure — they do not mutate the original. Chaining them is the idiomatic way to express data transformations.",
     },
     {
       type: "concept",
@@ -122,6 +128,8 @@ greet("Sora");      // "Hello, Sora."
 greet2("Sora");     // "Hello, Sora."`,
         caption: "Two equivalent ways to write the same function. The arrow form is shorter and is the default in modern code.",
       },
+      walkthrough:
+        "Both functions do the same thing. The arrow form has no `this` binding — it inherits `this` from the surrounding scope. This is one of the reasons arrow functions are common in callbacks and methods: they don't introduce a new `this` that would break the call site.",
     },
     {
       type: "concept",
@@ -129,7 +137,7 @@ greet2("Sora");     // "Hello, Sora."`,
       body:
         "The browser console is the developer's view into a running program. console.log prints a value. console.warn and console.error print with a coloured icon. console.dir prints an object's properties. console.table prints an array of objects as a table. To inspect, open the developer tools (F12 or Cmd-Opt-I) and look at the Console tab.",
       pitfall:
-        "If console.log is silent, check that the script is actually loaded. A common mistake is a 404 on the script file, or a syntax error in the file that prevents it from running at all.",
+        "If console.log is silent, check that the script is actually loaded. A common mistake is a 404 on the script file, or a syntax error in the file that prevents it from running at all. The Console tab will tell you about both.",
     },
     {
       type: "concept",
@@ -153,6 +161,8 @@ greet2("Sora");     // "Hello, Sora."`,
 <script src="app.js" defer></script>`,
         caption: "Three styles of attaching JavaScript. defer is the safe default for an external script in the <head>.",
       },
+      walkthrough:
+        "defer is the right attribute for an external script in <head>: the script downloads in parallel with the HTML and runs after the document is parsed, but before DOMContentLoaded. The async attribute runs the script as soon as it is ready, which is fine for self-contained scripts but breaks any code that touches the DOM.",
     },
     {
       type: "example",
@@ -199,7 +209,7 @@ button.addEventListener("click", () => {
         },
         {
           mistake: "Trying to read an element that does not exist yet.",
-          fix: "Wrap the code in DOMContentLoaded, place the script at the end of <body>, or use defer.",
+          fix: "Wrap the code in DOMContentLoaded, place the script at the end of <body>, or use defer on the <script> tag.",
         },
         {
           mistake: "Treating arrays and objects as deep-copied by assignment.",
@@ -210,9 +220,9 @@ button.addEventListener("click", () => {
     {
       type: "exercise",
       exerciseId: "m1l05-ex01",
-      title: "FizzBuzz in the console",
+      title: "FizzBuzz, in the console",
       description:
-        "Write a small function that prints numbers 1 to 15, but for multiples of 3 prints \"Fizz\", for multiples of 5 prints \"Buzz\", and for both prints \"FizzBuzz\". Use console.log.",
+        "Write a function fizzbuzz(n) that, for each number from 1 to n, logs the number — except replace multiples of 3 with \"Fizz\", multiples of 5 with \"Buzz\", and multiples of both with \"FizzBuzz\". Call it with n=15 and check the console output.",
     },
     {
       type: "quiz",

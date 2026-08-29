@@ -13,13 +13,28 @@ export type Section =
   | { type: "context"; body: string }
   | { type: "objectives"; items: string[] }
   | { type: "prose"; paragraphs: string[]; title?: string }
-  | { type: "concept"; title: string; body: string; mentalModel?: string; example?: { code: string; language: "html" | "css" | "js" | "ts" | "tsx" | "text"; caption?: string }; pitfall?: string; }
+  | { type: "concept"; title: string; body: string; mentalModel?: string; example?: { code: string; language: "html" | "css" | "js" | "ts" | "tsx" | "text"; caption?: string }; pitfall?: string; diagram?: DiagramKind; walkthrough?: string }
+  | { type: "diagram"; kind: DiagramKind; caption?: string }
   | { type: "example"; title: string; code: string; language: "html" | "css" | "js" | "ts" | "tsx" | "text"; walkthrough: string; runnable?: boolean }
   | { type: "mistakes"; title?: string; items: { mistake: string; fix: string }[] }
   | { type: "interactive"; componentKey: string; title?: string; description?: string }
   | { type: "exercise"; exerciseId: string; title?: string; description?: string }
   | { type: "quiz"; quizId: string; title?: string }
   | { type: "summary"; body: string };
+
+export type DiagramKind =
+  | "client-server"
+  | "browser-pipeline"
+  | "dom-tree"
+  | "box-model"
+  | "cascade"
+  | "cascade-detail"
+  | "flex-layout"
+  | "grid-layout"
+  | "event-flow"
+  | "ajax-flow"
+  | "react-render"
+  | "useeffect-lifecycle";
 
 export type QuizQuestion =
   | {

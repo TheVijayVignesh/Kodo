@@ -32,7 +32,7 @@ export const lecture: Lecture = {
       type: "objectives",
       items: [
         "Name the primitive types in JavaScript.",
-        "Tell the difference between null, undefined, and undeclared variables.",
+        "Tell the difference between null, undefined, and undeclared.",
         "Predict the result of a == b and a === b for a range of inputs.",
         "Convert types deliberately using Number(), String(), and Boolean().",
         "Recognise the truthy/falsy list and avoid surprises.",
@@ -67,6 +67,8 @@ typeof empty;    // "object"  — historical quirk
 const sym = Symbol("id");
 typeof sym;      // "symbol"`,
       },
+      walkthrough:
+        "bigint was added to the language so integers larger than 2^53 could be represented exactly. symbol was added so unique keys could be created without string collisions. Both are rare in everyday code but worth knowing exist.",
     },
     {
       type: "concept",
@@ -87,6 +89,8 @@ obj.missing;       // undefined
 try { neverDeclared } catch (e) { e.name }  // "ReferenceError"
 typeof neverDeclared;                          // "undefined" — safe to query`,
       },
+      walkthrough:
+        "The undeclared name is interesting: typeof neverDeclared returns 'undefined' without throwing, because typeof is one of the few operators that tolerates an undeclared identifier. That makes it useful for feature detection — `if (typeof someFeature !== 'undefined') ...` — but the same tolerance is also a common source of typos that fail silently.",
     },
     {
       type: "concept",
@@ -109,6 +113,8 @@ NaN == NaN     // false  — NaN is not equal to anything, including itself
 Number.isNaN(NaN)  // true  — the right way to check`,
         caption: "The cases where == and === disagree are the cases where the coercion hides a real difference.",
       },
+      walkthrough:
+        "Memorising the coercion table is wasted effort compared to the simpler rule: always use ===. The one place == earns its keep is `x == null`, which matches both null and undefined in one expression.",
     },
     {
       type: "concept",
@@ -128,6 +134,8 @@ Boolean("0")       // true   — the string "0" is truthy
 if ([]) console.log("yes");  // logs "yes"`,
         caption: "The falsy list is short. Memorise it. Everything else is truthy, including empty arrays and objects.",
       },
+      walkthrough:
+        "The fact that an empty array is truthy catches everyone once. Use `arr.length === 0` to check whether an array is empty. The string \"0\" is truthy for the same reason — the string is not empty.",
     },
     {
       type: "concept",
@@ -151,6 +159,8 @@ Boolean("")         // false
 +"42"               // 42  — unary plus
 +true               // 1`,
       },
+      walkthrough:
+        "Number() and parseFloat() behave differently for strings with units: Number(\"42.5px\") returns NaN, while parseFloat(\"42.5px\") returns 42.5. The parser is for human input; the constructor is for values you already have.",
     },
     {
       type: "example",
@@ -195,21 +205,21 @@ count([1, 2, 3]);     // 3`,
         },
         {
           mistake: "Treating NaN as equal to itself.",
-          fix: "NaN is the only value that is not equal to itself. Use Number.isNaN(x) to check.",
+          fix: "NaN is the only value that is not equal to itself, even with ===. Use Number.isNaN(x) to check.",
         },
         {
           mistake: "Using typeof on an undeclared identifier without realising it does not throw.",
           fix:
-            "typeof on a name that has never been declared returns 'undefined' — useful, but a sign you have a typo somewhere.",
+            "typeof on a name that has never been declared returns 'undefined' — useful for feature detection, but a sign you have a typo somewhere.",
         },
       ],
     },
     {
       type: "exercise",
       exerciseId: "m1l06-ex01",
-      title: "Strictly compare two values",
+      title: "Strict equality that handles NaN",
       description:
-        "Write a function that returns true only if the two inputs are strictly equal, both of the same type, and both not NaN.",
+        "Write a function same(a, b) that returns true if a and b are strictly equal AND neither is NaN.",
     },
     {
       type: "quiz",
@@ -287,7 +297,7 @@ export const exercises: Exercise[] = [
     lectureId: "m1l06",
     title: "Strict equality that handles NaN",
     brief:
-      "Write a function same(a, b) that returns true if a and b are strictly equal AND neither is NaN.",
+      "Write a function same(a, b) that returns true if a and b are strictly equal, excluding NaN.",
     kind: "js",
     starter:
 `function same(a, b) {

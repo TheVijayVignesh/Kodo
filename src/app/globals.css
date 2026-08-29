@@ -9,7 +9,8 @@
    Design tokens — Dark (sumi-ink) and Light (washi-paper) themes
    -------------------------------------------------------------------- */
 :root {
-  /* Ink palette (dark mode) — default */
+  /* Ink palette (dark mode) — default. True sumi-black: nearly pure black
+     with a hint of warmth so it does not look like flat #000. */
   --ink-50:  #f3eee5;
   --ink-100: #e8e0d0;
   --ink-200: #cdbfa6;
@@ -17,10 +18,10 @@
   --ink-400: #7d6a4f;
   --ink-500: #574731;
   --ink-600: #3a2f20;
-  --ink-700: #261d12;
-  --ink-800: #181208;
-  --ink-900: #0e0a05;
-  --ink-950: #070502;
+  --ink-700: #1d160d;
+  --ink-800: #0e0a05;
+  --ink-900: #050402;
+  --ink-950: #000000;
 
   /* Paper palette (light mode) */
   --paper-50:  #faf6ec;

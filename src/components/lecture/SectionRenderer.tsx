@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Lightbulb, AlertTriangle, FileCode2, Quote } from "lucide-react";
+import { Lightbulb, AlertTriangle, FileCode2, Quote, PenLine } from "lucide-react";
 import type { Section } from "@/lib/curriculum/types";
 import { CodeBlock } from "./CodeBlock";
+import { Diagram } from "./Diagram";
 import { InteractiveHost } from "./InteractiveHost";
 import { QuizPanel } from "@/components/quiz/QuizPanel";
 import { CodePlayground } from "@/components/playground/CodePlayground";
@@ -71,12 +72,13 @@ function SectionBlock({ section, lectureId }: { section: Section; lectureId: str
   }
   if (section.type === "concept") {
     return (
-      <div className="space-y-4">
+      <div className="space-y-5">
         <div className="flex items-center gap-3">
           <span className="seal" aria-hidden>理</span>
           <h2 className="headline-lg">{section.title}</h2>
         </div>
         <p className="body-prose">{section.body}</p>
+        {section.diagram && <Diagram kind={section.diagram} />}
         {section.mentalModel && (
           <div className="paper p-5 border-l-2 border-l-[var(--accent)]">
             <div className="flex items-center gap-2 text-eyebrow text-fg-faint mb-2">
@@ -90,6 +92,9 @@ function SectionBlock({ section, lectureId }: { section: Section; lectureId: str
           <div>
             <div className="text-eyebrow text-fg-faint mb-2">Example</div>
             <CodeBlock code={section.example.code} language={section.example.language} caption={section.example.caption} />
+            {section.walkthrough && (
+              <p className="body-prose text-fg-base mt-3">{section.walkthrough}</p>
+            )}
           </div>
         )}
         {section.pitfall && (
@@ -103,6 +108,9 @@ function SectionBlock({ section, lectureId }: { section: Section; lectureId: str
         )}
       </div>
     );
+  }
+  if (section.type === "diagram") {
+    return <Diagram kind={section.kind} caption={section.caption} />;
   }
   if (section.type === "example") {
     return (

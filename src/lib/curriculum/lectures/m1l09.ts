@@ -48,6 +48,11 @@ export const lecture: Lecture = {
         "Think of a restaurant. The old web is a fixed menu — you pick, the kitchen cooks, and the waiter brings a new plate. AJAX is asking the waiter to bring more water without you having to leave your seat.",
     },
     {
+      type: "diagram",
+      kind: "ajax-flow",
+      caption: "AJAX: the page asks the server for a small piece of data while it is open, and weaves the response in.",
+    },
+    {
       type: "concept",
       title: "fetch — the modern request API",
       body:
@@ -61,6 +66,8 @@ const tasks = await res.json();
 console.log(tasks);`,
         caption: "fetch returns a Response. response.ok is true for 2xx. response.json() parses the body.",
       },
+      walkthrough:
+        "The first await waits for the response headers. The status is now known. The second await waits for the body to be read. This is the common shape: check res.ok, then res.json(). If the body is not JSON, the .json() call will throw.",
     },
     {
       type: "concept",
@@ -89,6 +96,8 @@ async function loadTasks() {
 }`,
         caption: "Same flow, two styles. async/await is almost always clearer.",
       },
+      walkthrough:
+        "The async/await form reads like the synchronous version: fetch, check, parse, use. The try/catch wraps the whole flow and catches both network errors and non-2xx responses. The Promise form requires careful chaining to handle both kinds of failure.",
     },
     {
       type: "concept",
@@ -171,11 +180,11 @@ async function loadTasks() {
         {
           mistake: "Forgetting to handle errors.",
           fix:
-            "Wrap the call in try/catch. A request that hangs forever is one of the most frustrating UX problems.",
+            "Wrap the call in try/catch. A request that hangs forever is one of the most frustrating UX problems. Show the user that something is happening, and show an error if it fails.",
         },
         {
           mistake: "Making a request inside a render that runs on every state change.",
-          fix: "Trigger requests from event handlers or from a useEffect, not from the body of a component.",
+          fix: "Trigger requests from event handlers or from a useEffect, not from the body of a component. The body of a component runs on every render; the effect runs only when its dependencies change.",
         },
         {
           mistake: "Sending a token or sensitive header to a different origin.",
@@ -188,7 +197,7 @@ async function loadTasks() {
       exerciseId: "m1l09-ex01",
       title: "Parse and render a JSON response",
       description:
-        "Given a JSON array of items, render each item as a list item. The checker looks for at least one <li> in the rendered list.",
+        "The local mock dataset is already in scope. Iterate over it and render each item as an <li> inside <ul id='list'>. The checker looks for at least one <li>.",
     },
     {
       type: "quiz",
@@ -272,7 +281,7 @@ export const exercises: Exercise[] = [
     lectureId: "m1l09",
     title: "Parse and render a JSON response",
     brief:
-      "The local mock dataset is already in scope. Iterate over it and render each item as an <li> inside <ul id='list'>. The checker looks for at least one <li>.",
+      "The local mock dataset is already in scope as `items`. Iterate over it and render each item as an <li> inside <ul id='list'>. The checker looks for at least one <li>.",
     kind: "html",
     starter:
 `<!-- The list element -->

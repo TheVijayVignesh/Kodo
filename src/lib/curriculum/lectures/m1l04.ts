@@ -45,7 +45,7 @@ export const lecture: Lecture = {
       type: "concept",
       title: "Selectors — what each rule applies to",
       body:
-        "A selector is the part before the brace. It picks which elements the rule applies to. Element selectors match by tag name (.card matches by class, #main matches by id). Combinators express relationships (div > p matches p that are direct children of div; a + b matches a b that immediately follows another a). Attribute selectors match by attribute value. Pseudo-classes match by state (:hover, :focus, :first-child). Pseudo-elements match a specific part of an element (::before, ::first-letter).",
+        "A selector is the part before the brace. It picks which elements the rule applies to. Element selectors match by tag name. .card matches by class. #main matches by id. Combinators express relationships (div > p matches p that are direct children of div; a + b matches a b that immediately follows another a). Attribute selectors match by attribute value. Pseudo-classes match by state (:hover, :focus, :first-child). Pseudo-elements match a specific part of an element (::before, ::first-letter).",
       example: {
         language: "css",
         code:
@@ -94,6 +94,16 @@ article .note { color: #a23a2c; }`,
         "Using !important to force a style is a code smell. It means you've lost an argument with the cascade. The right fix is to make the selector more specific, or to remove a competing rule.",
     },
     {
+      type: "diagram",
+      kind: "cascade",
+      caption: "Higher specificity wins, regardless of where the rule sits in the file.",
+    },
+    {
+      type: "diagram",
+      kind: "cascade-detail",
+      caption: "When two rules conflict, the more specific one wins. Order in the file does not matter.",
+    },
+    {
       type: "concept",
       title: "The box model — every element is a box",
       body:
@@ -104,14 +114,21 @@ article .note { color: #a23a2c; }`,
 `* { box-sizing: border-box; }
 
 .card {
-  width: 320px;          /* the visible width */
-  padding: 24px;         /* inside the border */
+  width: 320px;            /* the visible width */
+  padding: 24px;            /* inside the border */
   border: 1px solid #d4c7a4;
-  margin: 16px;          /* outside the border */
+  margin: 16px;             /* outside the border */
   background: #fff;
 }`,
         caption: "With box-sizing: border-box, width includes padding and border. The card is exactly 320px wide.",
       },
+      walkthrough:
+        "Without box-sizing: border-box, width measures only the content. Add 24px padding on each side and the element becomes 320 + 48 = 368px wide. With border-box, the declared width is the visible width and padding eats into the content. Modern stylesheets set border-box globally so the math is intuitive.",
+    },
+    {
+      type: "diagram",
+      kind: "box-model",
+      caption: "The box model: content, padding, border, margin — from inside out.",
     },
     {
       type: "concept",
@@ -142,6 +159,11 @@ article .note { color: #a23a2c; }`,
       },
     },
     {
+      type: "diagram",
+      kind: "flex-layout",
+      caption: "Flex distributes children along a single axis. gap, justify-content, and flex control the layout.",
+    },
+    {
       type: "concept",
       title: "Grid — a two-dimensional layout",
       body:
@@ -163,6 +185,11 @@ article .note { color: #a23a2c; }`,
 .page > footer { grid-column: 1 / -1; }`,
         caption: "A page with two sidebars, a centred main column, and a header and footer that span the full width.",
       },
+    },
+    {
+      type: "diagram",
+      kind: "grid-layout",
+      caption: "CSS Grid: rows AND columns, with named regions that span the full width.",
     },
     {
       type: "example",
@@ -213,12 +240,12 @@ article .note { color: #a23a2c; }`,
         {
           mistake: "Floating elements for layout.",
           fix:
-            "Use flex or grid. Floats are for wrapping text around images and other inline content, not for laying out a page.",
+            "Use flex or grid. Floats are for wrapping text around images and other inline content, not for laying out a page. Floats will continue to surprise you in ways flexbox never will.",
         },
         {
           mistake: "Setting a height on every element.",
           fix:
-            "Heights are rigid. Let content decide the height unless you have a specific reason to fix it.",
+            "Heights are rigid. Let content decide the height unless you have a specific reason to fix it. Use min-height when you want a floor, not a ceiling.",
         },
       ],
     },
@@ -227,7 +254,7 @@ article .note { color: #a23a2c; }`,
       exerciseId: "m1l04-ex01",
       title: "Centre a card, give it padding, and a border",
       description:
-        "Write the CSS that centres a .card in its parent, gives it 24px padding, a 1px solid border, and rounded corners.",
+        "Write the CSS that centres a .card inside its parent, gives it 24px padding, a 1px solid border in #d4c7a4, and 14px border-radius. The card should be 320px wide.",
     },
     {
       type: "quiz",
@@ -286,7 +313,7 @@ export const quizzes: Quiz[] = [
         prompt: "Floats are a good tool for laying out a modern page.",
         correct: false,
         explanation:
-          "Float was designed for wrapping text around images. Use flex or grid for layout.",
+          "Float was designed for wrapping text around images. Use flex or grid for layout. Modern code rarely uses float outside of that one legacy use case.",
       },
       {
         kind: "mcq",
@@ -300,7 +327,7 @@ export const quizzes: Quiz[] = [
         ],
         correctIndex: 1,
         explanation:
-          "The universal selector applies box-sizing: border-box to every element, which makes width behave intuitively.",
+          "The universal selector applies box-sizing: border-box to every element, which makes width behave intuitively even when padding changes.",
       },
     ],
   },
