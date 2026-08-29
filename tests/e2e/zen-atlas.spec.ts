@@ -17,7 +17,9 @@
 
 import { test, expect } from "@playwright/test";
 
-const LECTURES = ["m1l01", "m1l02", "m1l03", "m1l04", "m1l05", "m1l06", "m1l07", "m1l08", "m1l09"];
+test.describe.configure({ mode: "serial" });
+
+const LECTURES = ["m1l01", "m1l02", "m1l03", "m1l04", "m1l05", "m1l06", "m1l07", "m1l08", "m1l09", "m2l01", "m2l02", "m2l03", "m2l04", "m2l05", "m2l06", "m2l07", "m2l08", "m2l09", "m2l10"];
 
 test.describe("Navigation", () => {
   test("Homepage loads and shows the studio heading", async ({ page }) => {
@@ -36,8 +38,10 @@ test.describe("Navigation", () => {
     test(`Lecture ${id} loads and has a hero heading`, async ({ page }) => {
       await page.goto(`/modules/1/${id}`);
       await expect(page.locator("h1")).toBeVisible();
-      // Coding exercise panel exists
-      await expect(page.getByText(/Coding exercise/i).first()).toBeVisible();
+      // Each lecture has at least a quiz; the Quiz lecture (m2l04) has no exercise.
+      await expect(
+        page.getByText(/(Coding exercise|React exercise|Knowledge check)/i).first()
+      ).toBeVisible();
     });
   }
 
