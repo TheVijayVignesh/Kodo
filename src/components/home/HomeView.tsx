@@ -70,6 +70,9 @@ export function HomeView() {
               <Link href="/modules/1" className="btn btn-primary btn-lg">
                 Enter Module 1 <ArrowRight size={16} />
               </Link>
+              <Link href="/modules/2" className="btn btn-primary btn-lg">
+                Enter Module 2 <ArrowRight size={16} />
+              </Link>
               <Link href="/exam" className="btn btn-ghost btn-lg">
                 <FileText size={16} /> Exam Hall
               </Link>
@@ -204,18 +207,46 @@ function ProgressBar({ value }: { value: number }) {
 function PathView() {
   const progress = useAppStore((s) => s.progress);
   return (
-    <section className="container-zen py-16">
-      <div className="text-eyebrow text-fg-faint mb-2 flex items-center gap-2">
-        <Compass size={12} />
-        Learning path
+    <section className="container-zen py-16 space-y-16">
+      <div>
+        <div className="text-eyebrow text-fg-faint mb-2 flex items-center gap-2">
+          <Compass size={12} />
+          Learning path
+        </div>
+        <h2 className="headline-xl mb-8">The path through the course</h2>
+        <PathFlow module={MODULE_1} progress={progress as any} exerciseCounts={EX_COUNTS} baseUrl="/modules/1" />
       </div>
-      <h2 className="headline-xl mb-8">The path through Module 1</h2>
-      <PathFlow progress={progress as any} />
+      <div>
+        <div className="text-eyebrow text-fg-faint mb-2 flex items-center gap-2">
+          <Compass size={12} />
+          Module 2
+        </div>
+        <h2 className="headline-xl mb-8">The path through React</h2>
+        <PathFlow
+          module={MODULE_2}
+          progress={progress as any}
+          exerciseCounts={RE_COUNTS}
+          baseUrl="/modules/1"
+          exerciseLabel="React exercise"
+        />
+      </div>
     </section>
   );
 }
 
-function PathFlow({ progress }: { progress: any }) {
+function PathFlow({
+  module,
+  progress,
+  exerciseCounts,
+  baseUrl,
+  exerciseLabel = "exercise",
+}: {
+  module: typeof MODULE_1;
+  progress: any;
+  exerciseCounts: Record<string, number>;
+  baseUrl: string;
+  exerciseLabel?: string;
+}) {
   return (
     <div className="paper p-6 md:p-10 relative overflow-hidden">
       <svg aria-hidden className="absolute inset-0 w-full h-full pointer-events-none opacity-50">
@@ -234,11 +265,12 @@ function PathFlow({ progress }: { progress: any }) {
         />
       </svg>
       <ol className="relative grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-12">
-        {MODULE_1.lectures.map((l) => {
+        {module.lectures.map((l) => {
           const status = getLectureStatus(l.id, progress);
+          const exCount = exerciseCounts[l.id] ?? 0;
           return (
             <li key={l.id} className="relative">
-              <Link href={`/modules/1/${l.id}`} className="block group">
+              <Link href={`${baseUrl}/${l.id}`} className="block group">
                 <div className="flex items-center gap-3 mb-2">
                   <Node status={status} n={l.number} />
                   <div>
@@ -252,7 +284,9 @@ function PathFlow({ progress }: { progress: any }) {
                 <div className="pl-12 mt-2 text-[11px] text-fg-faint flex items-center gap-3">
                   <span>{l.estimatedMinutes} min</span>
                   <span>·</span>
-                  <span>{EX_COUNTS[l.id]} exercise{EX_COUNTS[l.id] === 1 ? "" : "s"}</span>
+                  <span>
+                    {exCount} {exerciseLabel}{exCount === 1 ? "" : "s"}
+                  </span>
                   <span>·</span>
                   <span className="capitalize">{status.replace("_", " ")}</span>
                 </div>

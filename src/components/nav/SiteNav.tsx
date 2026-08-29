@@ -9,6 +9,7 @@ import { SearchPalette } from "@/components/nav/SearchPalette";
 const LINKS = [
   { href: "/", label: "Studio" },
   { href: "/modules/1", label: "Module 1" },
+  { href: "/modules/2", label: "Module 2" },
   { href: "/exam", label: "Exam Hall" },
   { href: "/sources", label: "Sources" },
 ];
