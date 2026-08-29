@@ -4,47 +4,52 @@ Audit of all educational material delivered in this milestone.
 
 ## Scope
 
-This audit covers Module 1 (Web Foundations) — 9 lectures, 9 coding exercises, 9 quizzes, 1 original 50-mark exam paper, 1 generated practice paper.
+This audit covers **Module 1 (Web Foundations, 9 lectures)** and **Module 2 (React, 10 lectures)**, plus the original 50-mark exam paper and a generated practice paper.
 
-Module 2 (React) is intentionally out of scope for this milestone per the master specification.
-
-## Module 1 lecture coverage
+## Module 1 — Web Foundations
 
 | # | Lecture | File | Theory | Diagram | Code example | Exercise | Quiz | Sources | Status |
 |---|---------|------|--------|---------|--------------|----------|------|---------|--------|
-| 1 | Course Introduction | `m1l01.ts` | ✓ | ✓ (client-server, browser-pipeline, dom-tree) | ✓ | ✓ | ✓ | 3 | Complete |
-| 2 | HTML | `m1l02.ts` | ✓ | ✓ (dom-tree) | ✓ | ✓ | ✓ | 3 | Complete |
+| 1 | Course Introduction | `m1l01.ts` | ✓ | client-server, browser-pipeline, dom-tree | ✓ | ✓ | ✓ | 3 | Complete |
+| 2 | HTML | `m1l02.ts` | ✓ | dom-tree | ✓ | ✓ | ✓ | 3 | Complete |
 | 3 | HTML Elements | `m1l03.ts` | ✓ | — | ✓ | ✓ | ✓ | 3 | Complete |
-| 4 | CSS | `m1l04.ts` | ✓ | ✓ (cascade, cascade-detail, box-model, flex-layout, grid-layout) | ✓ | ✓ | ✓ | 5 | Complete |
+| 4 | CSS | `m1l04.ts` | ✓ | cascade, cascade-detail, box-model, flex-layout, grid-layout | ✓ | ✓ | ✓ | 5 | Complete |
 | 5 | JavaScript | `m1l05.ts` | ✓ | — | ✓ | ✓ | ✓ | 3 | Complete |
 | 6 | JS Data Types | `m1l06.ts` | ✓ | — | ✓ | ✓ | ✓ | 3 | Complete |
 | 7 | JS Objects | `m1l07.ts` | ✓ | — | ✓ | ✓ | ✓ | 3 | Complete |
-| 8 | DOM and JS Events | `m1l08.ts` | ✓ | ✓ (dom-tree, event-flow) | ✓ | ✓ | ✓ | 4 | Complete |
-| 9 | AJAX | `m1l09.ts` | ✓ | ✓ (ajax-flow) | ✓ | ✓ | ✓ | 4 | Complete |
+| 8 | DOM and JS Events | `m1l08.ts` | ✓ | dom-tree, event-flow | ✓ | ✓ | ✓ | 4 | Complete |
+| 9 | AJAX | `m1l09.ts` | ✓ | ajax-flow | ✓ | ✓ | ✓ | 4 | Complete |
 
-All 9 lectures include:
-- Opening context paragraph
-- 3-7 concrete learning objectives
-- Multiple "concept" sections with theory, mental model, syntax/example, pitfall
-- Inline diagrams (hand-authored SVG, aesthetic-matched)
-- A worked example
-- A common mistakes section
-- A coding exercise with real checker
-- A knowledge-check quiz with explanations on each question
-- A closing summary
-- Source citations
+## Module 2 — React
+
+| # | Lecture | File | Theory | Diagram | Code example | Exercise | Quiz | Sources | Status |
+|---|---------|------|--------|---------|--------------|----------|------|---------|--------|
+| 1 | React | `m2l01.ts` | ✓ | react-render | ✓ | ✓ | ✓ | 3 | Complete |
+| 2 | MVC and ES6 | `m2l02.ts` | ✓ | — | ✓ | ✓ | ✓ | 3 | Complete |
+| 3 | JSX and React Components, Props | `m2l03.ts` | ✓ | — | ✓ | ✓ | ✓ | 4 | Complete |
+| 4 | Quiz | `m2l04.ts` | ✓ | react-render | — | — | ✓ (10 q) | 2 | Complete |
+| 5 | JSX, React Components and Props — Part 2 | `m2l05.ts` | ✓ | — | ✓ | ✓ | ✓ | 3 | Complete |
+| 6 | Rendering and Introduction to State | `m2l06.ts` | ✓ | react-render | ✓ | ✓ | ✓ | 2 | Complete |
+| 7 | Hook | `m2l07.ts` | ✓ | useeffect-lifecycle | ✓ | ✓ | ✓ | 3 | Complete |
+| 8 | React Routing | `m2l08.ts` | ✓ | — | ✓ | ✓ | ✓ | 2 | Complete |
+| 9 | React Bootstrap | `m2l09.ts` | ✓ | — | ✓ | ✓ | ✓ | 2 | Complete |
+| 10 | Hands-on Exercise | `m2l10.ts` | ✓ | — | ✓ | ✓ | ✓ | 2 | Complete |
+
+**Total: 19 lectures, 9 M1 exercises + 10 M2 React exercises, 19 quizzes.**
 
 ## Source coverage
 
 | Source type | Count | Where used |
 |-------------|-------|-----------|
 | Course slides (SJ_*.pptx) | 8 | Mapped to m1l01–m1l09 where the lecture had slides |
-| MDN HTML / CSS / DOM / Events / Forms / etc. | 10+ | All lectures cite MDN for reference |
-| React official documentation | 0 | (Not needed — Module 2 out of scope) |
-| W3C specifications | 0 | (Cited via MDN where applicable) |
+| MDN (Web Platform, DOM, Events, Forms, etc.) | 15+ | M1 lectures |
+| React official documentation (react.dev) | 8 | M2 lectures |
+| W3C specifications | 0 | Cited via MDN where applicable |
 | Deitel & Deitel textbook | 1 | M1L1 (general Web foundations) |
 
 ## Interactive activities
+
+### Module 1 (HTML/CSS/JS playground in a sandboxed iframe)
 
 | Lecture | Interactive | Exercise ID | Real checker? |
 |---------|-------------|--------------|---------------|
@@ -58,9 +63,44 @@ All 9 lectures include:
 | m1l08 | DomLab | m1l08-ex01 | ✓ (html-contains × 2) |
 | m1l09 | AjaxClient | m1l09-ex01 | ✓ (html-contains) |
 
-Every exercise runs in a sandboxed `<iframe sandbox="allow-scripts allow-same-origin">`. The `allow-same-origin` flag is what lets the parent read the iframe's DOM and computed styles for assertions. The iframe is otherwise isolated.
+### Module 2 (React playground in react-live with a JSX preview)
+
+| Lecture | Interactive | Exercise ID | Real checker? |
+|---------|-------------|--------------|---------------|
+| m2l01 | ReactSandbox | m2l01-ex01 | ✓ (renders-element, contains-text) |
+| m2l02 | ReactSandbox | m2l02-ex01 | ✓ (no-error) |
+| m2l03 | ReactSandbox | m2l03-ex01 | ✓ (renders-element, contains-text) |
+| m2l05 | ReactSandbox | m2l05-ex01 | ✓ (renders-element, has-class) |
+| m2l06 | ReactSandbox | m2l06-ex01 | ✓ (renders-element, contains-text) |
+| m2l07 | ReactSandbox | m2l07-ex01 | ✓ (renders-element) |
+| m2l08 | ReactSandbox | m2l08-ex01 | ✓ (renders-element) |
+| m2l09 | ReactSandbox | m2l09-ex01 | ✓ (renders-element) |
+| m2l10 | ReactSandbox | m2l10-ex01 | ✓ (renders-element) |
+
+Every exercise runs in a sandboxed iframe (M1) or react-live's controlled iframe (M2). The `allow-same-origin` flag on the M1 sandbox lets the parent read the rendered DOM for assertions.
 
 Each test produces a structured result with `pass`, `detail`, and (on failure) `expected` and `received` strings that tell the learner exactly what was wrong.
+
+## Diagrams authored
+
+All diagrams are hand-authored SVG, drawn to match the Zen palette. They are **not** stock images, AI-generated art, or external assets.
+
+| Kind | Used in |
+|------|---------|
+| client-server | m1l01 |
+| browser-pipeline | m1l01 |
+| dom-tree | m1l01, m1l02, m1l08 |
+| box-model | m1l04 |
+| cascade | m1l04 |
+| cascade-detail | m1l04 |
+| flex-layout | m1l04 |
+| grid-layout | m1l04 |
+| event-flow | m1l08 |
+| ajax-flow | m1l09 |
+| react-render | m1l01, m2l01, m2l04, m2l06 |
+| useeffect-lifecycle | m2l07 |
+
+The diagram component is implemented in `src/components/lecture/Diagram.tsx` and renders accessible SVG with `<title>` elements for screen readers.
 
 ## Exam coverage
 
@@ -79,45 +119,27 @@ Each exam question includes:
 - Marks-oriented notes
 - For code questions in the original, a runnable modern equivalent (fetch vs XHR)
 
-## Diagrams authored
-
-All diagrams are hand-authored SVG, drawn to match the Zen palette. They are **not** stock images, AI-generated art, or external assets.
-
-| Kind | Used in |
-|------|---------|
-| client-server | m1l01 |
-| browser-pipeline | m1l01 |
-| dom-tree | m1l01, m1l02, m1l08 |
-| box-model | m1l04 |
-| cascade | m1l04 |
-| cascade-detail | m1l04 |
-| flex-layout | m1l04 |
-| grid-layout | m1l04 |
-| event-flow | m1l08 |
-| ajax-flow | m1l09 |
-
-The diagram component is implemented in `src/components/lecture/Diagram.tsx` and renders accessible SVG with `<title>` elements for screen readers.
-
 ## Final probe
 
 | Check | Result |
 |-------|--------|
-| All 9 Module 1 lectures complete | ✓ |
-| Supplied course content incorporated | ✓ (every lecture that had slides cites them) |
-| Supplemental research incorporated | ✓ (MDN references, official React docs cited where Module 2 starts) |
+| All 19 lectures (M1 + M2) complete | ✓ |
+| Supplied course content incorporated | ✓ (every M1 lecture that had slides cites them) |
+| Supplemental research incorporated | ✓ (MDN, official React docs) |
 | Examples complete | ✓ (each lecture has worked example with walkthrough) |
-| Coding exercises complete | ✓ (one per lecture, all with real checkers) |
-| Quizzes complete | ✓ (5-7 questions per lecture with explanations) |
+| Coding/React exercises complete | ✓ (one per non-quiz lecture) |
+| Quizzes complete | ✓ (4-10 questions per lecture with explanations) |
 | Original 50-mark exam complete | ✓ |
 | Practice Paper 1 complete | ✓ |
 | All solutions hidden by default, revealed on demand | ✓ |
 | No fake interactivity | ✓ — every checker actually executes and verifies |
-| No self-authored 3D artwork | ✓ — dropped the 3D attempt entirely |
+| No self-authored 3D artwork | ✓ — dropped entirely per user direction |
 | No AI-generated decorative artwork | ✓ |
 | No fake decorative SVG branches | ✓ |
 
 ## Known limitations
 
-- Module 2 (React, 10 lectures) is not in this milestone. The skill for react-bootstrap, React Router, hooks, JSX, etc. would expand the curriculum significantly.
-- The exam solution for Q3 of the original paper contains a small typographical correction: the original text has `<script>` at the top and `</seript>` (typo) at the bottom; the solved example uses `<script>` and `</script>`. The original wording is preserved; the solved code uses the corrected form, with the typo noted in the solution.
-- The course materials supplied do not include Module 2 slides, so that module is research-only and out of scope for this milestone.
+- **The 100-mark end-semester paper is not in this milestone**, per the master specification.
+- **No 3D environment** — removed per user direction. The visual depth is achieved through petals + atmosphere gradients + inline SVG diagrams.
+- **Lint** — `next lint` is removed in Next 16. ESLint flat config is the replacement and was not configured in this milestone. The TypeScript strict mode (`tsc --noEmit`) is the primary safety net.
+- **React sandbox** is `react-live`, which transpiles JSX in the browser via @babel/standalone. It is functional but adds ~200 KB to the bundle. A more performant alternative (Sandpack) was considered and may be substituted in a future round.
