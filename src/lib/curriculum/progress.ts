@@ -1,17 +1,35 @@
-import { MODULE_1, LECTURE_BY_ID } from "@/lib/curriculum/lectures/index";
+import { MODULE_1, MODULE_2, LECTURE_BY_ID } from "@/lib/curriculum/lectures/index";
 import type { LectureId } from "@/lib/curriculum/types";
 
 export type NodeStatus = "locked" | "available" | "in_progress" | "completed";
+
+/**
+ * Resolve which module a lecture belongs to, and its index within that module.
+ */
+function moduleAndIndex(id: LectureId): { module: typeof MODULE_1; index: number } | null {
+  const m1Idx = MODULE_1.lectures.findIndex((l) => l.id === id);
+  if (m1Idx >= 0) return { module: MODULE_1, index: m1Idx };
+  const m2Idx = MODULE_2.lectures.findIndex((l) => l.id === id);
+  if (m2Idx >= 0) return { module: MODULE_2, index: m2Idx };
+  return null;
+}
 
 export function getLectureStatus(
   id: LectureId,
   progress: Record<string, { visited?: boolean; completed?: boolean }>
 ): NodeStatus {
-  const idx = MODULE_1.lectures.findIndex((l) => l.id === id);
-  if (idx < 0) return "available";
-  // Module 1 is the only active module; lectures unlock sequentially
-  for (let i = 0; i < idx; i++) {
-    const prevId = MODULE_1.lectures[i].id;
+  const found = moduleAndIndex(id);
+  if (!found) return "available";
+  // Lectures unlock sequentially within their own module. Module 2 is
+  // also gated on the last lecture of Module 1.
+  const { module, index } = found;
+  // Gate M2 on M1 completion
+  if (module === MODULE_2) {
+    const lastM1 = MODULE_1.lectures[MODULE_1.lectures.length - 1];
+    if (!progress[lastM1.id]?.completed) return "locked";
+  }
+  for (let i = 0; i < index; i++) {
+    const prevId = module.lectures[i].id;
     if (!progress[prevId]?.visited) return "locked";
   }
   const p = progress[id];
