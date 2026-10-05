@@ -132,7 +132,7 @@ function QuizItem({
     <div>
       <div className="flex items-start gap-3">
         <span className="text-eyebrow text-fg-faint mt-1">{String(index + 1).padStart(2, "0")}</span>
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <p className="text-[0.97rem] text-fg-strong leading-relaxed">{q.prompt}</p>
 
           {q.kind === "mcq" || q.kind === "identify-bug" ? (

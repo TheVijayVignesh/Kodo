@@ -1,11 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-
-export type LectureId =
-  | "m1l01" | "m1l02" | "m1l03" | "m1l04" | "m1l05"
-  | "m1l06" | "m1l07" | "m1l08" | "m1l09"
-  | "m2l01" | "m2l02" | "m2l03" | "m2l04" | "m2l05"
-  | "m2l06" | "m2l07" | "m2l08" | "m2l09" | "m2l10";
+import type { LectureId } from "./curriculum/types";
+export type { LectureId } from "./curriculum/types";
 
 export type LectureProgress = {
   visited: boolean;
@@ -76,6 +72,14 @@ const initialProgress: Record<LectureId, LectureProgress> = {
   m2l08: { ...emptyProgress },
   m2l09: { ...emptyProgress },
   m2l10: { ...emptyProgress },
+  m3l01: { ...emptyProgress },
+  m3l02: { ...emptyProgress },
+  m3l03: { ...emptyProgress },
+  m3l04: { ...emptyProgress },
+  m3l05: { ...emptyProgress },
+  m3l06: { ...emptyProgress },
+  m3l07: { ...emptyProgress },
+  m3l08: { ...emptyProgress },
 };
 
 export const useAppStore = create<State>()(
@@ -149,6 +153,17 @@ export const useAppStore = create<State>()(
       name: "zen-atlas-v1",
       storage: createJSONStorage(() => (typeof window !== "undefined" ? localStorage : (undefined as unknown as Storage))),
       version: 1,
+      merge: (persistedState, currentState) => {
+        const persisted = persistedState as Partial<State> | null;
+        return {
+          ...currentState,
+          ...persisted,
+          progress: {
+            ...currentState.progress,
+            ...persisted?.progress,
+          },
+        };
+      },
     }
   )
 );

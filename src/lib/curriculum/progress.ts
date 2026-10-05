@@ -1,16 +1,19 @@
-import { MODULE_1, MODULE_2, LECTURE_BY_ID } from "@/lib/curriculum/lectures/index";
+import { MODULE_1, MODULE_2, MODULE_3, LECTURE_BY_ID } from "@/lib/curriculum/lectures/index";
 import type { LectureId } from "@/lib/curriculum/types";
 
 export type NodeStatus = "locked" | "available" | "in_progress" | "completed";
+type CurriculumModule = typeof MODULE_1 | typeof MODULE_2 | typeof MODULE_3;
+
+const modules: CurriculumModule[] = [MODULE_1, MODULE_2, MODULE_3];
 
 /**
  * Resolve which module a lecture belongs to, and its index within that module.
  */
-function moduleAndIndex(id: LectureId): { module: typeof MODULE_1; index: number } | null {
-  const m1Idx = MODULE_1.lectures.findIndex((l) => l.id === id);
-  if (m1Idx >= 0) return { module: MODULE_1, index: m1Idx };
-  const m2Idx = MODULE_2.lectures.findIndex((l) => l.id === id);
-  if (m2Idx >= 0) return { module: MODULE_2, index: m2Idx };
+function moduleAndIndex(id: LectureId): { module: CurriculumModule; index: number } | null {
+  for (const module of modules) {
+    const index = module.lectures.findIndex((l) => l.id === id);
+    if (index >= 0) return { module, index };
+  }
   return null;
 }
 
@@ -20,13 +23,18 @@ export function getLectureStatus(
 ): NodeStatus {
   const found = moduleAndIndex(id);
   if (!found) return "available";
-  // Lectures unlock sequentially within their own module. Module 2 is
-  // also gated on the last lecture of Module 1.
+  // Lectures unlock sequentially within their own module; later modules
+  // remain gated on completion of the previous module's final lecture.
   const { module, index } = found;
   // Gate M2 on M1 completion
   if (module === MODULE_2) {
     const lastM1 = MODULE_1.lectures[MODULE_1.lectures.length - 1];
     if (!progress[lastM1.id]?.completed) return "locked";
+  }
+  // Gate M3 on M2 completion
+  if (module === MODULE_3) {
+    const lastM2 = MODULE_2.lectures[MODULE_2.lectures.length - 1];
+    if (!progress[lastM2.id]?.completed) return "locked";
   }
   for (let i = 0; i < index; i++) {
     const prevId = module.lectures[i].id;
@@ -72,15 +80,15 @@ export function getModuleProgress(
 }
 
 export function nextLecture(id: LectureId): LectureId | null {
-  const idx = MODULE_1.lectures.findIndex((l) => l.id === id);
-  if (idx < 0 || idx === MODULE_1.lectures.length - 1) return null;
-  return MODULE_1.lectures[idx + 1].id;
+  const found = moduleAndIndex(id);
+  if (!found || found.index === found.module.lectures.length - 1) return null;
+  return found.module.lectures[found.index + 1].id;
 }
 
 export function prevLecture(id: LectureId): LectureId | null {
-  const idx = MODULE_1.lectures.findIndex((l) => l.id === id);
-  if (idx <= 0) return null;
-  return MODULE_1.lectures[idx - 1].id;
+  const found = moduleAndIndex(id);
+  if (!found || found.index === 0) return null;
+  return found.module.lectures[found.index - 1].id;
 }
 
 export function getLecture(id: LectureId) {

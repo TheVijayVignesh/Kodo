@@ -9,7 +9,9 @@ export type LectureId =
   | "m1l01" | "m1l02" | "m1l03" | "m1l04" | "m1l05"
   | "m1l06" | "m1l07" | "m1l08" | "m1l09"
   | "m2l01" | "m2l02" | "m2l03" | "m2l04" | "m2l05"
-  | "m2l06" | "m2l07" | "m2l08" | "m2l09" | "m2l10";
+  | "m2l06" | "m2l07" | "m2l08" | "m2l09" | "m2l10"
+  | "m3l01" | "m3l02" | "m3l03" | "m3l04"
+  | "m3l05" | "m3l06" | "m3l07" | "m3l08";
 
 export type Section =
   | { type: "context"; body: string }
@@ -124,7 +126,7 @@ export type ReactExercise = {
 
 export type Lecture = {
   id: LectureId;
-  module: 1 | 2;
+  module: 1 | 2 | 3;
   number: number;
   title: string;
   subtitle: string;
@@ -132,7 +134,7 @@ export type Lecture = {
   difficulty: "foundational" | "core" | "applied" | "advanced";
   objectives: string[];
   sections: Section[];
-  sources: { label: string; url?: string; type: "course" | "mdn" | "react" | "react-docs" | "w3c" | "book" }[];
+  sources: { label: string; url?: string; type: "course" | "mdn" | "react" | "react-docs" | "w3c" | "book" | "node" | "express" | "npm" | "mysql" | "mongodb" }[];
   prerequisites: LectureId[];
 };
 

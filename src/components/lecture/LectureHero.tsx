@@ -7,6 +7,7 @@ import type { Lecture } from "@/lib/curriculum/types";
 import { useAppStore } from "@/lib/store";
 import { nextLecture, lectureProgressPct } from "@/lib/curriculum/progress";
 import { EXERCISE_COUNT_BY_LECTURE } from "@/lib/curriculum/lectures/index";
+import { lectureHref } from "@/lib/curriculum/routes";
 
 const KANJI_BY_LECTURE: Record<string, string> = {
   m1l01: "序",
@@ -33,7 +34,7 @@ export function LectureHero({ lecture }: { lecture: Lecture }) {
     <section className="relative overflow-hidden">
       <div className="container-zen pt-10 md:pt-16 pb-10">
         <div className="flex items-center gap-2 text-eyebrow text-fg-faint mb-6">
-          <Link href="/modules/1" className="hover:text-fg-base">Module 1</Link>
+          <Link href={`/modules/${lecture.module}`} className="hover:text-fg-base">Module {lecture.module}</Link>
           <span className="text-fg-faint">/</span>
           <span>Lecture {String(lecture.number).padStart(2, "0")}</span>
         </div>
@@ -92,7 +93,7 @@ export function LectureHero({ lecture }: { lecture: Lecture }) {
             </div>
             {next && (
               <Link
-                href={`/modules/1/${next}`}
+                href={lectureHref(next)}
                 className="btn btn-ghost btn-sm w-full justify-between"
               >
                 Next lecture <ArrowRight size={14} />

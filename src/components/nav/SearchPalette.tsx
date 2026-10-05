@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Search, X, BookOpen, FileText, GraduationCap, Code2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LECTURE_BY_ID, MODULE_1 } from "@/lib/curriculum/lectures/index";
+import { MODULE_1, MODULE_3 } from "@/lib/curriculum/lectures/index";
 import { PAPER_BY_ID } from "@/lib/exam/papers";
 
 type Hit = {
@@ -34,16 +34,19 @@ export function SearchPalette() {
     const query = q.trim().toLowerCase();
     if (!query) return [];
     const out: Hit[] = [];
-    for (const l of MODULE_1.lectures) {
-      if (l.title.toLowerCase().includes(query) || l.subtitle.toLowerCase().includes(query)) {
-        out.push({ title: l.title, subtitle: `Module 1 · Lecture ${l.number}`, href: `/modules/1/${l.id}`, kind: "lecture" });
-      }
-      for (const sec of l.sections) {
-        if (sec.type === "concept" && sec.title.toLowerCase().includes(query)) {
-          out.push({ title: sec.title, subtitle: `${l.title} · concept`, href: `/modules/1/${l.id}`, kind: "section" });
+    for (const module of [MODULE_1, MODULE_3]) {
+      const baseUrl = `/modules/${module.number}`;
+      for (const l of module.lectures) {
+        if (l.title.toLowerCase().includes(query) || l.subtitle.toLowerCase().includes(query)) {
+          out.push({ title: l.title, subtitle: `Module ${module.number} · Lecture ${l.number}`, href: `${baseUrl}/${l.id}`, kind: "lecture" });
         }
-        if (sec.type === "exercise" && sec.exerciseId.toLowerCase().includes(query)) {
-          out.push({ title: `Exercise · ${l.title}`, subtitle: "coding exercise", href: `/modules/1/${l.id}`, kind: "exercise" });
+        for (const sec of l.sections) {
+          if (sec.type === "concept" && sec.title.toLowerCase().includes(query)) {
+            out.push({ title: sec.title, subtitle: `${l.title} · concept`, href: `${baseUrl}/${l.id}`, kind: "section" });
+          }
+          if (sec.type === "exercise" && sec.exerciseId.toLowerCase().includes(query)) {
+            out.push({ title: `Exercise · ${l.title}`, subtitle: "coding exercise", href: `${baseUrl}/${l.id}`, kind: "exercise" });
+          }
         }
       }
     }

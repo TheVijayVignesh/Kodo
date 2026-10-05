@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, FileText, Layers, Compass, PenLine, Sparkles, GraduationCap, Library, CheckCircle2 } from "lucide-react";
 import { useAppStore } from "@/lib/store";
-import { MODULE_1, MODULE_2, EXERCISE_COUNT_BY_LECTURE, REACT_EXERCISE_COUNT_BY_LECTURE } from "@/lib/curriculum/lectures/index";
+import { MODULE_1, MODULE_2, MODULE_3, EXERCISE_COUNT_BY_LECTURE, REACT_EXERCISE_COUNT_BY_LECTURE } from "@/lib/curriculum/lectures/index";
 import { getModuleProgress, getLectureStatus, lectureProgressPct } from "@/lib/curriculum/progress";
 import type { LectureId } from "@/lib/curriculum/types";
 
@@ -18,6 +18,7 @@ export function HomeView() {
   const allIds = [
     ...MODULE_1.lectures.map((l) => l.id),
     ...MODULE_2.lectures.map((l) => l.id),
+    ...MODULE_3.lectures.map((l) => l.id),
   ] as LectureId[];
   const totalExercises =
     Object.values(EX_COUNTS).reduce((a, b) => a + b, 0) +
@@ -25,11 +26,15 @@ export function HomeView() {
 
   const m1Ids = MODULE_1.lectures.map((l) => l.id) as LectureId[];
   const m2Ids = MODULE_2.lectures.map((l) => l.id) as LectureId[];
+  const m3Ids = MODULE_3.lectures.map((l) => l.id) as LectureId[];
   const m1Pct = getModuleProgress(progress as any, m1Ids, EX_COUNTS);
   const m2Pct = getModuleProgress(progress as any, m2Ids, RE_COUNTS);
+  const m3Pct = getModuleProgress(progress as any, m3Ids, EX_COUNTS);
   const m1Completed = m1Ids.filter((id) => progress[id]?.completed).length;
   const m2Completed = m2Ids.filter((id) => progress[id]?.completed).length;
-  const allCompleted = m1Completed + m2Completed;
+  const m3Completed = m3Ids.filter((id) => progress[id]?.completed).length;
+  const allCompleted = m1Completed + m2Completed + m3Completed;
+  const allLectures = [...MODULE_1.lectures, ...MODULE_2.lectures, ...MODULE_3.lectures];
 
   const lastVisited = useMemo(() => {
     return allIds
@@ -65,10 +70,11 @@ export function HomeView() {
               <span className="block text-fg-faint">as a quiet study</span>
             </h1>
             <p className="body-prose mt-7 text-fg-muted">
-              An interactive learning environment for the CS3005 Web Technologies
-              curriculum. Nine lessons cover the platform, the languages, the document
-              tree, and the network. Every concept has a working example, every
-              example has a checker, and your progress is yours to keep.
+              A quiet, interactive studio for all 27 lectures across the three-module
+              CS3005 Web Technologies curriculum. Explore web foundations, React, and
+              server-side ideas at a measured pace. Node.js, server, and database
+              examples are illustrative; browser-safe checks let you practice related
+              concepts here, and your progress is yours to keep.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-3">
@@ -77,6 +83,9 @@ export function HomeView() {
               </Link>
               <Link href="/modules/2" className="btn btn-primary btn-lg">
                 Enter Module 2 <ArrowRight size={16} />
+              </Link>
+              <Link href="/modules/3" className="btn btn-primary btn-lg">
+                Enter Module 3 <ArrowRight size={16} />
               </Link>
               <Link href="/exam" className="btn btn-ghost btn-lg">
                 <FileText size={16} /> Exam Hall
@@ -121,10 +130,10 @@ export function HomeView() {
               <div>
                 <div className="text-eyebrow text-fg-faint">Continue learning</div>
                 <h2 className="headline-lg mt-1">
-                  {[...MODULE_1.lectures, ...MODULE_2.lectures].find((l) => l.id === recommended)?.title}
+                  {allLectures.find((l) => l.id === recommended)?.title}
                 </h2>
               </div>
-              <Link href={`/modules/1/${recommended}`} className="btn btn-primary">
+              <Link href={recommended.startsWith("m3") ? `/modules/3/${recommended}` : `/modules/1/${recommended}`} className="btn btn-primary">
                 Resume <ArrowRight size={14} />
               </Link>
             </div>
@@ -134,11 +143,13 @@ export function HomeView() {
                 { [recommended]: progress[recommended] } as any,
                 recommended.startsWith("m1")
                   ? EX_COUNTS[recommended as keyof typeof EX_COUNTS]
-                  : RE_COUNTS[recommended] ?? 0
+                  : recommended.startsWith("m3")
+                    ? EX_COUNTS[recommended as keyof typeof EX_COUNTS]
+                    : RE_COUNTS[recommended] ?? 0
               )}
             />
             <p className="text-fg-muted mt-3 text-sm leading-relaxed">
-              {[...MODULE_1.lectures, ...MODULE_2.lectures].find((l) => l.id === recommended)?.subtitle}
+              {allLectures.find((l) => l.id === recommended)?.subtitle}
             </p>
           </div>
 
@@ -166,7 +177,7 @@ export function HomeView() {
 
       <section className="container-zen pb-24">
         <div className="ink-divider" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           <Link href="/modules/1" className="paper p-5 hover:border-[var(--accent)] transition-colors">
             <BookOpen size={20} className="text-[var(--accent)] mb-3" />
             <div className="headline-md text-fg-strong">Module 1</div>
@@ -176,6 +187,11 @@ export function HomeView() {
             <PenLine size={20} className="text-[var(--accent)] mb-3" />
             <div className="headline-md text-fg-strong">Module 2</div>
             <p className="text-fg-muted text-sm mt-1 leading-relaxed">React. Components, props, state, hooks, routing, and a design system. Ten lectures.</p>
+          </Link>
+          <Link href="/modules/3" className="paper p-5 hover:border-[var(--accent)] transition-colors">
+            <Layers size={20} className="text-[var(--accent)] mb-3" />
+            <div className="headline-md text-fg-strong">Module 3</div>
+            <p className="text-fg-muted text-sm mt-1 leading-relaxed">{MODULE_3.title}. Eight lectures. {m3Completed} of {m3Ids.length} complete · {m3Pct}% progress.</p>
           </Link>
           <Link href="/exam" className="paper p-5 hover:border-[var(--accent)] transition-colors">
             <FileText size={20} className="text-[var(--accent)] mb-3" />
@@ -243,6 +259,19 @@ function PathView() {
           exerciseLabel="React exercise"
         />
       </div>
+      <div>
+        <div className="text-eyebrow text-fg-faint mb-2 flex items-center gap-2">
+          <Compass size={12} />
+          Module 3
+        </div>
+        <h2 className="headline-xl mb-8">The path through server-side programming</h2>
+        <PathFlow
+          module={MODULE_3}
+          progress={progress as any}
+          exerciseCounts={EX_COUNTS}
+          baseUrl="/modules/3"
+        />
+      </div>
     </section>
   );
 }
@@ -254,7 +283,7 @@ function PathFlow({
   baseUrl,
   exerciseLabel = "exercise",
 }: {
-  module: typeof MODULE_1;
+  module: typeof MODULE_1 | typeof MODULE_2 | typeof MODULE_3;
   progress: any;
   exerciseCounts: Record<string, number>;
   baseUrl: string;

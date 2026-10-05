@@ -9,7 +9,8 @@ import { LectureHero } from "@/components/lecture/LectureHero";
 import { useAppStore } from "@/lib/store";
 import { nextLecture, prevLecture, lectureProgressPct } from "@/lib/curriculum/progress";
 import { EXERCISE_COUNT_BY_LECTURE, LECTURE_BY_ID } from "@/lib/curriculum/lectures/index";
-import type { Lecture } from "@/lib/curriculum/types";
+import { lectureHref } from "@/lib/curriculum/routes";
+import type { Lecture, LectureId } from "@/lib/curriculum/types";
 
 export function LectureView({ lecture }: { lecture: Lecture }) {
   const setVisited = useAppStore((s) => s.setVisited);
@@ -46,7 +47,7 @@ export function LectureView({ lecture }: { lecture: Lecture }) {
         />
       </div>
 
-      <LectureFooter prev={prev} next={next} />
+      <LectureFooter prev={prev} next={next} moduleNumber={lecture.module} />
     </div>
   );
 }
@@ -111,7 +112,15 @@ function CompletionBar({ completed, pct, onComplete, onReset }: { completed: boo
   );
 }
 
-function LectureFooter({ prev, next }: { prev: string | null; next: string | null }) {
+function LectureFooter({
+  prev,
+  next,
+  moduleNumber,
+}: {
+  prev: LectureId | null;
+  next: LectureId | null;
+  moduleNumber: Lecture["module"];
+}) {
   const prevTitle = prev ? LECTURE_BY_ID[prev as keyof typeof LECTURE_BY_ID]?.title : null;
   const nextTitle = next ? LECTURE_BY_ID[next as keyof typeof LECTURE_BY_ID]?.title : null;
 
@@ -123,7 +132,7 @@ function LectureFooter({ prev, next }: { prev: string | null; next: string | nul
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {prev ? (
           <Link
-            href={`/modules/1/${prev}`}
+            href={lectureHref(prev)}
             className="paper p-5 md:p-6 flex items-center justify-between gap-4 group transition-colors hover:border-[var(--accent)]"
           >
             <div className="flex items-center gap-4 min-w-0">
@@ -138,13 +147,13 @@ function LectureFooter({ prev, next }: { prev: string | null; next: string | nul
           </Link>
         ) : (
           <div className="paper p-5 md:p-6 opacity-50">
-            <div className="text-eyebrow text-fg-faint">Start of Module 1</div>
+            <div className="text-eyebrow text-fg-faint">Start of Module {moduleNumber}</div>
             <div className="font-display text-fg-base">This is the first lecture.</div>
           </div>
         )}
         {next ? (
           <Link
-            href={`/modules/1/${next}`}
+            href={lectureHref(next)}
             className="paper p-5 md:p-6 flex items-center justify-between gap-4 group transition-colors hover:border-[var(--accent)]"
           >
             <div className="flex items-center gap-4 min-w-0 flex-1 justify-end text-right">
@@ -160,7 +169,7 @@ function LectureFooter({ prev, next }: { prev: string | null; next: string | nul
         ) : (
           <div className="paper p-5 md:p-6 flex items-center justify-between gap-3 opacity-60">
             <div>
-              <div className="text-eyebrow text-fg-faint">End of Module 1</div>
+              <div className="text-eyebrow text-fg-faint">End of Module {moduleNumber}</div>
               <div className="font-display text-fg-base">This is the last lecture.</div>
             </div>
             <GraduationCap size={16} className="text-fg-faint" />
