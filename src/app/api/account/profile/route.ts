@@ -1,23 +1,8 @@
 import { neon } from "@neondatabase/serverless";
-import { clerkClient, verifyToken } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
-async function authenticatedClerkUserId(request: Request) {
-  const token = request.headers.get("authorization")?.match(/^Bearer\s+(.+)$/i)?.[1];
-  if (!token || !process.env.CLERK_SECRET_KEY) return null;
-  try {
-    const verified = await verifyToken(token, {
-      secretKey: process.env.CLERK_SECRET_KEY,
-      authorizedParties: [new URL(request.url).origin],
-    });
-    const subject = (verified.data as { sub?: unknown } | undefined)?.sub;
-    return typeof subject === "string" ? subject : null;
-  } catch {
-    return null;
-  }
-}
-
-export async function PUT(request: Request) {
-  const clerkUserId = await authenticatedClerkUserId(request);
+export async function PUT() {
+  const { userId: clerkUserId } = await auth();
   if (!clerkUserId) return Response.json({ error: "Sign in to save account details." }, { status: 401 });
   if (!process.env.DATABASE_URL) return Response.json({ error: "Account storage is not configured." }, { status: 503 });
 

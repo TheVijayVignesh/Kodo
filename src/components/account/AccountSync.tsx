@@ -26,13 +26,11 @@ function parseSnapshot(value: unknown): LearnerSnapshot | null {
   return value as unknown as LearnerSnapshot;
 }
 
-async function requestSnapshot(method: "GET" | "PUT", snapshot?: LearnerSnapshot, getToken?: () => Promise<string | null>) {
-  const token = await getToken?.();
+async function requestSnapshot(method: "GET" | "PUT", snapshot?: LearnerSnapshot) {
   const response = await fetch("/kodo/api/progress", {
     method,
     headers: {
       ...(method === "PUT" ? { "Content-Type": "application/json" } : {}),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     body: method === "PUT" ? JSON.stringify({ snapshot }) : undefined,
     credentials: "same-origin",
@@ -48,10 +46,9 @@ export function AccountSync() {
   return <AccountSyncForIdentity userId={userId} pending={isPending} />;
 }
 
-export function AccountSyncForIdentity({ userId, pending, getToken }: {
+export function AccountSyncForIdentity({ userId, pending }: {
   userId: string | null;
   pending: boolean;
-  getToken?: () => Promise<string | null>;
 }) {
   useEffect(() => {
     if (pending) return;
@@ -74,7 +71,7 @@ export function AccountSyncForIdentity({ userId, pending, getToken }: {
         pendingSnapshot = undefined;
         setAccountSyncStatus({ state: "syncing" });
         try {
-          await requestSnapshot("PUT", pending, getToken);
+          await requestSnapshot("PUT", pending);
           if (active && !pendingSnapshot) setAccountSyncStatus({ state: "synced" });
         } catch (cause) {
           if (active) setAccountSyncStatus({ state: "error", message: cause instanceof Error ? cause.message : "Progress sync failed." });
@@ -84,7 +81,7 @@ export function AccountSyncForIdentity({ userId, pending, getToken }: {
     };
 
     setAccountSyncStatus({ state: "syncing" });
-    void requestSnapshot("GET", undefined, getToken).then(async ({ snapshot }) => {
+    void requestSnapshot("GET").then(async ({ snapshot }) => {
       if (!active) return;
       const cloud = snapshot == null ? null : parseSnapshot(snapshot);
       if (snapshot != null && !cloud) throw new Error("The saved progress format is not supported by this version of Kōdo. Update the app before syncing.");
@@ -97,7 +94,7 @@ export function AccountSyncForIdentity({ userId, pending, getToken }: {
         notes: merged.notes,
         examAttempts: merged.examAttempts,
       });
-      await requestSnapshot("PUT", merged, getToken);
+      await requestSnapshot("PUT", merged);
       if (!active) return;
       writesReady = true;
       setAccountSyncStatus({ state: "synced" });
@@ -118,7 +115,7 @@ export function AccountSyncForIdentity({ userId, pending, getToken }: {
       unsubscribe();
       if (timer) clearTimeout(timer);
     };
-  }, [pending, userId, getToken]);
+  }, [pending, userId]);
 
   return null;
 }
