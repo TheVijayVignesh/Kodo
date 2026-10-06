@@ -5,6 +5,7 @@ import { SakuraLayer } from "@/components/visuals/SakuraLayer";
 import { AmbientBackdrop } from "@/components/visuals/AmbientBackdrop";
 import { SiteNav } from "@/components/nav/SiteNav";
 import { ThemeScript } from "@/components/system/ThemeScript";
+import { AccountSync } from "@/components/account/AccountSync";
 
 const display = Spectral({
   variable: "--font-display",
@@ -77,6 +78,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <AmbientBackdrop />
         <div className="relative z-10 flex min-h-screen flex-col">
           <SiteNav />
+          <AccountSync />
           <main className="flex-1">{children}</main>
         </div>
       </body>

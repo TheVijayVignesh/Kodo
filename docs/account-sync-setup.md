@@ -11,3 +11,5 @@ Kōdo uses Supabase Auth for email/password accounts and a row-level-security pr
 5. Add the same two variables to the production hosting environment and rebuild/redeploy the app.
 
 Email confirmation can remain enabled. New learners will follow the confirmation link back to the Kōdo account page before signing in.
+
+When a learner creates a new account, existing progress on that device initializes the account snapshot. When an account already has a saved snapshot, that cloud snapshot is loaded on sign-in so an older browser cache cannot restore progress that was reset on another device. Subsequent progress changes are saved to the account automatically.
