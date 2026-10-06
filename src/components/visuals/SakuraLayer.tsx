@@ -51,7 +51,7 @@ export function SakuraLayer() {
       else existing.addEventListener("load", start, { once: true });
     } else {
       const s = document.createElement("script");
-      s.src = "/sakura.min.js";
+      s.src = "/kodo/sakura.min.js";
       s.async = true;
       s.dataset.sakuraBundle = "true";
       s.addEventListener("load", start, { once: true });

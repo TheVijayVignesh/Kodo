@@ -70,7 +70,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <ThemeScript />
-        <link rel="stylesheet" href="/sakura.min.css" />
+        <link rel="stylesheet" href="/kodo/sakura.min.css" />
       </head>
       <body className="min-h-screen relative">
         <SakuraLayer />
