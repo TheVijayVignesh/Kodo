@@ -62,10 +62,7 @@ function Module1View() {
               >
                 <Link
                   href={`/modules/1/${l.id}`}
-                  className={
-                    "paper block p-5 md:p-6 transition-colors " +
-                    (status === "locked" ? "opacity-60 pointer-events-none" : "hover:border-[var(--accent)]")
-                  }
+                  className="paper block p-5 md:p-6 transition-colors hover:border-[var(--accent)]"
                 >
                   <div className="flex items-start gap-4">
                     <NodeBig status={status} n={l.number} />
@@ -144,10 +141,7 @@ function Module2View() {
               >
                 <Link
                   href={`/modules/1/${l.id}`}
-                  className={
-                    "paper block p-5 md:p-6 transition-colors " +
-                    (status === "locked" ? "opacity-60 pointer-events-none" : "hover:border-[var(--accent)]")
-                  }
+                  className="paper block p-5 md:p-6 transition-colors hover:border-[var(--accent)]"
                 >
                   <div className="flex items-start gap-4">
                     <NodeBig status={status} n={l.number} />
@@ -228,10 +222,7 @@ function Module3View() {
               >
                 <Link
                   href={`/modules/3/${l.id}`}
-                  className={
-                    "paper block p-5 md:p-6 transition-colors " +
-                    (status === "locked" ? "opacity-60 pointer-events-none" : "hover:border-[var(--accent)]")
-                  }
+                  className="paper block p-5 md:p-6 transition-colors hover:border-[var(--accent)]"
                 >
                   <div className="flex items-start gap-4">
                     <NodeBig status={status} n={l.number} />
@@ -274,7 +265,6 @@ function Tag({ label }: { label: string }) {
 
 function NodeBig({ status, n }: { status: ReturnType<typeof getLectureStatus>; n: number }) {
   const styles: Record<typeof status, string> = {
-    locked: "border-rule text-fg-faint bg-[var(--bg-ink)]",
     available: "border-rule text-fg-faint bg-[var(--bg-ink)]",
     in_progress: "border-[var(--gold-400)] text-fg-strong bg-[var(--bg-paper)]",
     completed: "border-[var(--accent)] text-[var(--accent)] bg-[var(--bg-paper)]",

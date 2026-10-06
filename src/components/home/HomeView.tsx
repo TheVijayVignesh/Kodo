@@ -343,7 +343,6 @@ function PathFlow({
 
 function Node({ status, n }: { status: ReturnType<typeof getLectureStatus>; n: number }) {
   const styles: Record<typeof status, string> = {
-    locked: "border-rule text-fg-faint bg-[var(--bg-ink)]",
     available: "border-rule text-fg-faint bg-[var(--bg-ink)]",
     in_progress: "border-[var(--gold-400)] text-fg-strong bg-[var(--bg-paper)]",
     completed: "border-[var(--accent)] text-[var(--accent)] bg-[var(--bg-paper)]",
