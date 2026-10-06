@@ -20,9 +20,7 @@ function subscribe(listener: () => void) {
   return () => listeners.delete(listener);
 }
 
-function getSnapshot() {
-  return currentStatus;
-}
+function getSnapshot() { return currentStatus; }
 
 export function useAccountSyncStatus() {
   return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);

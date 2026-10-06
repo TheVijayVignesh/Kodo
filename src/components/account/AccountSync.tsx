@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import type { User } from "@supabase/supabase-js";
+import { neonAuth } from "@/lib/auth/client";
 import { useAppStore, type ExamAttempt, type LectureProgress } from "@/lib/store";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { setAccountSyncStatus } from "@/lib/supabase/sync-status";
+import { setAccountSyncStatus } from "@/lib/auth/sync-status";
 
 type LearnerSnapshot = {
   version: 1;
@@ -15,13 +14,7 @@ type LearnerSnapshot = {
 };
 
 function snapshotFromStore(state: ReturnType<typeof useAppStore.getState>): LearnerSnapshot {
-  return {
-    version: 1,
-    progress: state.progress,
-    bookmarks: state.bookmarks,
-    notes: state.notes,
-    examAttempts: state.examAttempts,
-  };
+  return { version: 1, progress: state.progress, bookmarks: state.bookmarks, notes: state.notes, examAttempts: state.examAttempts };
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -29,97 +22,63 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function parseSnapshot(value: unknown): LearnerSnapshot | null {
-  if (!isRecord(value) || value.version !== 1) return null;
-  if (!isRecord(value.progress) || !Array.isArray(value.bookmarks) || !isRecord(value.notes) || !Array.isArray(value.examAttempts)) return null;
+  if (!isRecord(value) || value.version !== 1 || !isRecord(value.progress) || !Array.isArray(value.bookmarks) || !isRecord(value.notes) || !Array.isArray(value.examAttempts)) return null;
   return value as unknown as LearnerSnapshot;
 }
 
+async function requestSnapshot(method: "GET" | "PUT", snapshot?: LearnerSnapshot) {
+  const response = await fetch("/kodo/api/progress", {
+    method,
+    headers: method === "PUT" ? { "Content-Type": "application/json" } : undefined,
+    body: method === "PUT" ? JSON.stringify({ snapshot }) : undefined,
+    credentials: "same-origin",
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(typeof payload.error === "string" ? payload.error : "Progress sync failed.");
+  return payload as { snapshot?: unknown };
+}
+
 export function AccountSync() {
+  const { data: session, isPending } = neonAuth.useSession();
+  const userId = session?.user?.id ?? null;
+
   useEffect(() => {
-    const supabase = getSupabaseBrowserClient();
-    if (!supabase) {
-      setAccountSyncStatus({ state: "not_configured" });
+    if (isPending) return;
+    if (!userId) {
+      setAccountSyncStatus({ state: "signed_out" });
       return;
     }
 
-    let generation = 0;
-    let activeUserId: string | null = null;
-    let processingUserId: string | null = null;
+    let active = true;
     let writesReady = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
-    let pendingSnapshot: { userId: string; snapshot: LearnerSnapshot } | undefined;
+    let pendingSnapshot: LearnerSnapshot | undefined;
     let saving = false;
 
     const flush = async () => {
       if (saving || !pendingSnapshot) return;
       saving = true;
-      while (pendingSnapshot) {
+      while (pendingSnapshot && active) {
         const pending = pendingSnapshot;
         pendingSnapshot = undefined;
-        if (activeUserId !== pending.userId) continue;
         setAccountSyncStatus({ state: "syncing" });
-        let error: Error | null = null;
         try {
-          const result = await supabase
-            .from("learner_snapshots")
-            .upsert({ user_id: pending.userId, snapshot: pending.snapshot });
-          error = result.error;
+          await requestSnapshot("PUT", pending);
+          if (active && !pendingSnapshot) setAccountSyncStatus({ state: "synced" });
         } catch (cause) {
-          error = cause instanceof Error ? cause : new Error("The progress sync request failed.");
-        }
-        if (activeUserId !== pending.userId) continue;
-        if (error) {
-          setAccountSyncStatus({ state: "error", message: error.message });
-        } else if (!pendingSnapshot) {
-          setAccountSyncStatus({ state: "synced" });
+          if (active) setAccountSyncStatus({ state: "error", message: cause instanceof Error ? cause.message : "Progress sync failed." });
         }
       }
       saving = false;
     };
 
-    const startSync = async (user: User | null) => {
-      const userId = user?.id ?? null;
-      if (userId === activeUserId && (writesReady || processingUserId === userId)) return;
-      const requestGeneration = ++generation;
-      activeUserId = userId;
-      writesReady = false;
-      pendingSnapshot = undefined;
-      if (timer) clearTimeout(timer);
-
-      if (!userId) {
-        processingUserId = null;
-        setAccountSyncStatus({ state: "signed_out" });
-        return;
-      }
-
-      processingUserId = userId;
-      setAccountSyncStatus({ state: "syncing" });
-      const { data, error } = await supabase
-        .from("learner_snapshots")
-        .select("snapshot")
-        .eq("user_id", userId)
-        .maybeSingle();
-      if (requestGeneration !== generation) return;
-      if (error) {
-        processingUserId = null;
-        writesReady = false;
-        setAccountSyncStatus({ state: "error", message: error.message });
-        return;
-      }
+    setAccountSyncStatus({ state: "syncing" });
+    void requestSnapshot("GET").then(async ({ snapshot }) => {
+      if (!active) return;
+      const cloud = snapshot == null ? null : parseSnapshot(snapshot);
+      if (snapshot != null && !cloud) throw new Error("The saved progress format is not supported by this version of Kōdo. Update the app before syncing.");
 
       const local = snapshotFromStore(useAppStore.getState());
-      const cloud = parseSnapshot(data?.snapshot);
-      if (data && !cloud) {
-        processingUserId = null;
-        writesReady = false;
-        setAccountSyncStatus({
-          state: "error",
-          message: "The saved progress format is not supported by this version of Kōdo. Update the app before syncing.",
-        });
-        return;
-      }
-      // A saved account snapshot is canonical on returning devices. This keeps
-      // an older local cache from restoring progress the learner reset elsewhere.
       const merged = cloud ?? local;
       useAppStore.setState({
         progress: merged.progress as ReturnType<typeof useAppStore.getState>["progress"],
@@ -127,41 +86,28 @@ export function AccountSync() {
         notes: merged.notes,
         examAttempts: merged.examAttempts,
       });
-
-      const { error: saveError } = await supabase
-        .from("learner_snapshots")
-        .upsert({ user_id: userId, snapshot: merged });
-      if (requestGeneration !== generation) return;
-      processingUserId = null;
+      await requestSnapshot("PUT", merged);
+      if (!active) return;
       writesReady = true;
-      setAccountSyncStatus(saveError
-        ? { state: "error", message: saveError.message }
-        : { state: "synced" });
-    };
+      setAccountSyncStatus({ state: "synced" });
+    }).catch((cause) => {
+      if (active) setAccountSyncStatus({ state: "error", message: cause instanceof Error ? cause.message : "Progress sync failed." });
+    });
 
     const unsubscribe = useAppStore.subscribe((state, previous) => {
-      if (!writesReady || !activeUserId) return;
+      if (!writesReady) return;
       if (state.progress === previous.progress && state.bookmarks === previous.bookmarks && state.notes === previous.notes && state.examAttempts === previous.examAttempts) return;
-      pendingSnapshot = { userId: activeUserId, snapshot: snapshotFromStore(state) };
+      pendingSnapshot = snapshotFromStore(state);
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => void flush(), 700);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      queueMicrotask(() => void startSync(session?.user ?? null));
-    });
-    void supabase.auth.getSession().then(({ data, error }) => {
-      if (error) setAccountSyncStatus({ state: "error", message: error.message });
-      else void startSync(data.session?.user ?? null);
-    });
-
     return () => {
-      generation += 1;
+      active = false;
       unsubscribe();
-      subscription.unsubscribe();
       if (timer) clearTimeout(timer);
     };
-  }, []);
+  }, [isPending, userId]);
 
   return null;
 }
