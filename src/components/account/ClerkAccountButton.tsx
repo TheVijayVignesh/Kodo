@@ -1,15 +1,15 @@
 "use client";
 
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 import { UserRound } from "lucide-react";
 
 export function ClerkAccountButton() {
   return (
     <>
-      <SignedIn>
+      <Show when="signed-in">
         <UserButton />
-      </SignedIn>
-      <SignedOut>
+      </Show>
+      <Show when="signed-out">
         <SignInButton mode="modal" forceRedirectUrl="/account">
           <button
             type="button"
@@ -20,7 +20,7 @@ export function ClerkAccountButton() {
             <UserRound size={16} aria-hidden="true" />
           </button>
         </SignInButton>
-      </SignedOut>
+      </Show>
     </>
   );
 }

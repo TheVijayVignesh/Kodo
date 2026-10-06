@@ -6,8 +6,7 @@ const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
 export default function AccountPage() {
   return (
     <>
-      {clerkConfigured && <ClerkAccountPanel />}
-      <NeonAccountPanel />
+      {clerkConfigured ? <ClerkAccountPanel /> : <NeonAccountPanel />}
     </>
   );
 }
