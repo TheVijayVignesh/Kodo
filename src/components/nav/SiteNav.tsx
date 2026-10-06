@@ -11,6 +11,7 @@ const LINKS = [
   { href: "/modules/1", label: "Module 1" },
   { href: "/modules/2", label: "Module 2" },
   { href: "/modules/3", label: "Module 3" },
+  { href: "/account", label: "Account" },
   { href: "/exam", label: "Exam Hall" },
   { href: "/sources", label: "Sources" },
 ];
