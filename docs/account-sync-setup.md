@@ -16,9 +16,10 @@ For local development, configure Neon Auth's local return URL as `http://localho
 
 1. Create a Clerk application for Kōdo and enable Google in **Configure > SSO connections**. Clerk's development Google connection uses its shared OAuth credentials; production needs your own Google OAuth credentials.
 2. Copy the Clerk development publishable and secret keys into `.env.local` as `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY`. Add both to the Vercel Preview environment only while validating the feature.
-3. Restart the local server after adding the keys. In `/kodo/account`, use the Google option in Clerk's sign-in window. The profile panel supports editing the account name and photo. Progress sync uses Clerk's verified user ID in `learner_snapshots`.
-4. Add `http://localhost:3000` and the Preview deployment origin to Clerk's allowed origins if Clerk asks for them. Google OAuth may need to open in Safari instead of an embedded in-app browser.
+3. Apply [`neon/migrations/0002_learner_profiles.sql`](../neon/migrations/0002_learner_profiles.sql) to the connected database. The migration adds a small profile table for Clerk account ID, email, display name, and avatar URL.
+4. Restart the local server after adding the keys. In `/kodo/account`, use the Google option in Clerk's sign-in window. The profile panel supports editing the account name and photo. Progress sync uses Clerk's verified user ID in `learner_snapshots`, and profile data is copied from Clerk into `learner_profiles` after sign-in and profile edits.
+5. Add `http://localhost:3000` and the Preview deployment origin to Clerk's allowed origins if Clerk asks for them. Google OAuth may need to open in Safari instead of an embedded in-app browser.
 
-The existing Neon email/password flow remains available and its saved snapshots are preserved. Clerk profiles are managed by Clerk; only the namespaced account ID and learner snapshot are stored in Neon. No profile webhook is required for sign-in or progress sync.
+The existing Neon email/password flow remains available and its saved snapshots are preserved. Clerk remains the source of truth for profile edits; the app copies its current profile details into Neon when the learner signs in and after they edit their profile. No profile webhook is required for local and Preview use.
 
 When a learner creates a new account, existing progress on that device initializes the account snapshot. When an account already has a saved snapshot, that cloud snapshot is loaded on sign-in so an older browser cache cannot restore progress that was reset on another device. Subsequent progress changes are saved to the account automatically.

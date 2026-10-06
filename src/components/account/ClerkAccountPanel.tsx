@@ -1,11 +1,35 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
-import { SignInButton, SignUpButton, UserProfile, useUser } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, UserProfile, useAuth, useUser } from "@clerk/nextjs";
 
 export function ClerkAccountPanel() {
   const { isLoaded, isSignedIn, user } = useUser();
+  const { getToken } = useAuth();
+  const [profileStatus, setProfileStatus] = useState("");
+
+  useEffect(() => {
+    if (!isSignedIn || !user) return;
+    let active = true;
+    void (async () => {
+      setProfileStatus("Saving your profile details…");
+      try {
+        const token = await getToken();
+        const response = await fetch("/kodo/api/account/profile", {
+          method: "PUT",
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+          credentials: "same-origin",
+        });
+        if (!response.ok) throw new Error("Profile details could not be saved to Neon.");
+        if (active) setProfileStatus("Your profile details are saved with your account.");
+      } catch (cause) {
+        if (active) setProfileStatus(cause instanceof Error ? cause.message : "Profile details could not be saved.");
+      }
+    })();
+    return () => { active = false; };
+  }, [getToken, isSignedIn, user?.id, user?.firstName, user?.lastName, user?.imageUrl, user?.primaryEmailAddressId]);
 
   return (
     <section className="container-zen pt-16 md:pt-24 pb-4">
@@ -23,6 +47,7 @@ export function ClerkAccountPanel() {
           ) : isSignedIn ? (
             <div className="mt-7">
               <p className="mb-5 text-sm text-fg-muted">Signed in as <span className="text-fg-strong">{user.primaryEmailAddress?.emailAddress}</span></p>
+              {profileStatus && <p className="mb-4 text-xs text-fg-faint" role="status">{profileStatus}</p>}
               <UserProfile routing="hash" />
             </div>
           ) : (
