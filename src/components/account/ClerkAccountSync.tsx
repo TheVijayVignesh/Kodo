@@ -12,7 +12,7 @@ export function ClerkAccountSync() {
   return (
     <AccountSyncForIdentity
       userId={clerkUserId ? `clerk:${clerkUserId}` : neonSession?.user?.id ?? null}
-      pending={!isLoaded || neonPending}
+      pending={!isLoaded || (!clerkUserId && neonPending)}
     />
   );
 }
