@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/system/ThemeToggle";
+import { AccountButton } from "@/components/account/AccountButton";
 import { SearchPalette } from "@/components/nav/SearchPalette";
 
 const LINKS = [
@@ -54,6 +55,7 @@ export function SiteNav() {
             <span className="w-px h-5 bg-rule mx-2" />
             <SearchPalette />
             <ThemeToggle />
+            <AccountButton />
           </nav>
 
           <button
