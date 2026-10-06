@@ -58,9 +58,15 @@ export function AccountSync() {
         pendingSnapshot = undefined;
         if (activeUserId !== pending.userId) continue;
         setAccountSyncStatus({ state: "syncing" });
-        const { error } = await supabase
-          .from("learner_snapshots")
-          .upsert({ user_id: pending.userId, snapshot: pending.snapshot });
+        let error: Error | null = null;
+        try {
+          const result = await supabase
+            .from("learner_snapshots")
+            .upsert({ user_id: pending.userId, snapshot: pending.snapshot });
+          error = result.error;
+        } catch (cause) {
+          error = cause instanceof Error ? cause : new Error("The progress sync request failed.");
+        }
         if (activeUserId !== pending.userId) continue;
         if (error) {
           setAccountSyncStatus({ state: "error", message: error.message });
@@ -96,13 +102,22 @@ export function AccountSync() {
       if (requestGeneration !== generation) return;
       if (error) {
         processingUserId = null;
-        writesReady = true;
+        writesReady = false;
         setAccountSyncStatus({ state: "error", message: error.message });
         return;
       }
 
       const local = snapshotFromStore(useAppStore.getState());
       const cloud = parseSnapshot(data?.snapshot);
+      if (data && !cloud) {
+        processingUserId = null;
+        writesReady = false;
+        setAccountSyncStatus({
+          state: "error",
+          message: "The saved progress format is not supported by this version of Kōdo. Update the app before syncing.",
+        });
+        return;
+      }
       // A saved account snapshot is canonical on returning devices. This keeps
       // an older local cache from restoring progress the learner reset elsewhere.
       const merged = cloud ?? local;
