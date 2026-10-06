@@ -21,8 +21,8 @@ function isSnapshot(value: unknown): value is Snapshot {
     Array.isArray(candidate.examAttempts);
 }
 
-export async function GET() {
-  const userId = await getCurrentLearnerId();
+export async function GET(request: Request) {
+  const userId = await getCurrentLearnerId(request);
   if (!userId) return Response.json({ error: "Sign in to sync progress." }, { status: 401 });
   if (!process.env.DATABASE_URL) return Response.json({ error: "Progress storage is not configured." }, { status: 503 });
 
@@ -36,7 +36,7 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const userId = await getCurrentLearnerId();
+  const userId = await getCurrentLearnerId(request);
   if (!userId) return Response.json({ error: "Sign in to sync progress." }, { status: 401 });
   if (!process.env.DATABASE_URL) return Response.json({ error: "Progress storage is not configured." }, { status: 503 });
 

@@ -1,8 +1,9 @@
 import { neon } from "@neondatabase/serverless";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs/server";
+import { getClerkUserId } from "@/lib/auth/identity";
 
-export async function PUT() {
-  const { userId: clerkUserId } = await auth();
+export async function PUT(request: Request) {
+  const clerkUserId = await getClerkUserId(request);
   if (!clerkUserId) return Response.json({ error: "Sign in to save account details." }, { status: 401 });
   if (!process.env.DATABASE_URL) return Response.json({ error: "Account storage is not configured." }, { status: 503 });
 

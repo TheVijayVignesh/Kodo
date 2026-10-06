@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
-import { SignInButton, SignUpButton, UserProfile, useUser } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, UserProfile, useAuth, useUser } from "@clerk/nextjs";
 import { useAccountSyncStatus } from "@/lib/auth/sync-status";
 
 export function ClerkAccountPanel() {
   const { isLoaded, isSignedIn, user } = useUser();
+  const { getToken } = useAuth();
   const syncStatus = useAccountSyncStatus();
   const [profileStatus, setProfileStatus] = useState("");
 
@@ -17,8 +18,10 @@ export function ClerkAccountPanel() {
     void (async () => {
       setProfileStatus("Saving your profile details…");
       try {
+        const token = await getToken();
         const response = await fetch("/kodo/api/account/profile", {
           method: "PUT",
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
           credentials: "same-origin",
         });
         if (!response.ok) throw new Error("Profile details could not be saved to Neon.");
@@ -28,7 +31,7 @@ export function ClerkAccountPanel() {
       }
     })();
     return () => { active = false; };
-  }, [isSignedIn, user?.id, user?.firstName, user?.lastName, user?.imageUrl, user?.primaryEmailAddressId]);
+  }, [getToken, isSignedIn, user?.id, user?.firstName, user?.lastName, user?.imageUrl, user?.primaryEmailAddressId]);
 
   return (
     <section className="container-zen pt-16 md:pt-24 pb-4">
