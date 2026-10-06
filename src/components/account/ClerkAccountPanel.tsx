@@ -52,10 +52,10 @@ export function ClerkAccountPanel() {
             </div>
           ) : (
             <div className="mt-7 space-y-4">
-              <SignInButton mode="modal" forceRedirectUrl="/account">
+              <SignInButton mode="modal">
                 <button className="btn btn-primary btn-lg w-full" type="button">Continue with Google or email</button>
               </SignInButton>
-              <SignUpButton mode="modal" forceRedirectUrl="/account">
+              <SignUpButton mode="modal">
                 <button className="btn btn-ghost w-full" type="button">Create a new account</button>
               </SignUpButton>
               <p className="text-xs text-fg-faint leading-relaxed">Choose Google in the sign-in window. Your account profile and photo are managed securely by Clerk.</p>

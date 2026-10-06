@@ -25,7 +25,11 @@ function AppFrame({ children }: { children: ReactNode }) {
       </div>
     </>
   );
-  return clerkConfigured ? <ClerkProvider>{content}</ClerkProvider> : content;
+  return clerkConfigured ? (
+    <ClerkProvider signInForceRedirectUrl="/kodo" signUpForceRedirectUrl="/kodo">
+      {content}
+    </ClerkProvider>
+  ) : content;
 }
 
 const display = Spectral({

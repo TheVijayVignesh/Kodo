@@ -10,7 +10,7 @@ export function ClerkAccountButton() {
         <UserButton />
       </Show>
       <Show when="signed-out">
-        <SignInButton mode="modal" forceRedirectUrl="/account">
+        <SignInButton mode="modal">
           <button
             type="button"
             aria-label="Sign in or open account"
