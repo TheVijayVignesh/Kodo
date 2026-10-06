@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ThemeToggle } from "@/components/system/ThemeToggle";
 import { AccountButton } from "@/components/account/AccountButton";
 import { SearchPalette } from "@/components/nav/SearchPalette";
+import type { ReactNode } from "react";
 
 const LINKS = [
   { href: "/", label: "Studio" },
@@ -17,7 +18,7 @@ const LINKS = [
   { href: "/sources", label: "Sources" },
 ];
 
-export function SiteNav() {
+export function SiteNav({ accountControl }: { accountControl?: ReactNode }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   return (
@@ -55,7 +56,7 @@ export function SiteNav() {
             <span className="w-px h-5 bg-rule mx-2" />
             <SearchPalette />
             <ThemeToggle />
-            <AccountButton />
+            {accountControl ?? <AccountButton />}
           </nav>
 
           <button
@@ -89,6 +90,8 @@ export function SiteNav() {
               <div className="pt-2 flex items-center gap-2">
                 <ThemeToggle />
                 <span className="text-xs text-fg-faint">Theme</span>
+                <span className="ml-auto text-xs text-fg-faint">Account</span>
+                {accountControl ?? <AccountButton />}
               </div>
             </div>
           </div>

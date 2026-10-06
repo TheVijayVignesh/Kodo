@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { getNeonAuthServer } from "@/lib/auth/server";
+import { verifyToken } from "@clerk/nextjs/server";
 
 const MAX_SNAPSHOT_BYTES = 1_000_000;
 
@@ -21,15 +22,29 @@ function isSnapshot(value: unknown): value is Snapshot {
     Array.isArray(candidate.examAttempts);
 }
 
-async function authenticatedUserId() {
+async function authenticatedUserId(request: Request) {
+  const bearerToken = request.headers.get("authorization")?.match(/^Bearer\s+(.+)$/i)?.[1];
+  if (bearerToken) {
+    if (!process.env.CLERK_SECRET_KEY) return null;
+    try {
+      const verified = await verifyToken(bearerToken, {
+        secretKey: process.env.CLERK_SECRET_KEY,
+        authorizedParties: [new URL(request.url).origin],
+      });
+      const subject = (verified.data as { sub?: unknown } | undefined)?.sub;
+      return typeof subject === "string" ? `clerk:${subject}` : null;
+    } catch {
+      return null;
+    }
+  }
   if (!process.env.NEON_AUTH_BASE_URL || !process.env.NEON_AUTH_COOKIE_SECRET) return null;
   const { data, error } = await getNeonAuthServer().getSession();
   if (error) return null;
   return data?.user?.id ?? null;
 }
 
-export async function GET() {
-  const userId = await authenticatedUserId();
+export async function GET(request: Request) {
+  const userId = await authenticatedUserId(request);
   if (!userId) return Response.json({ error: "Sign in to sync progress." }, { status: 401 });
   if (!process.env.DATABASE_URL) return Response.json({ error: "Progress storage is not configured." }, { status: 503 });
 
@@ -43,7 +58,7 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const userId = await authenticatedUserId();
+  const userId = await authenticatedUserId(request);
   if (!userId) return Response.json({ error: "Sign in to sync progress." }, { status: 401 });
   if (!process.env.DATABASE_URL) return Response.json({ error: "Progress storage is not configured." }, { status: 503 });
 

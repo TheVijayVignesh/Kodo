@@ -6,6 +6,27 @@ import { AmbientBackdrop } from "@/components/visuals/AmbientBackdrop";
 import { SiteNav } from "@/components/nav/SiteNav";
 import { ThemeScript } from "@/components/system/ThemeScript";
 import { AccountSync } from "@/components/account/AccountSync";
+import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkAccountButton } from "@/components/account/ClerkAccountButton";
+import { ClerkAccountSync } from "@/components/account/ClerkAccountSync";
+import type { ReactNode } from "react";
+
+const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY);
+
+function AppFrame({ children }: { children: ReactNode }) {
+  const content = (
+    <>
+      <SakuraLayer />
+      <AmbientBackdrop />
+      <div className="relative z-10 flex min-h-screen flex-col">
+        <SiteNav accountControl={clerkConfigured ? <ClerkAccountButton /> : undefined} />
+        {clerkConfigured ? <ClerkAccountSync /> : <AccountSync />}
+        <main className="flex-1">{children}</main>
+      </div>
+    </>
+  );
+  return clerkConfigured ? <ClerkProvider>{content}</ClerkProvider> : content;
+}
 
 const display = Spectral({
   variable: "--font-display",
@@ -73,15 +94,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeScript />
         <link rel="stylesheet" href="/kodo/sakura.min.css" />
       </head>
-      <body className="min-h-screen relative">
-        <SakuraLayer />
-        <AmbientBackdrop />
-        <div className="relative z-10 flex min-h-screen flex-col">
-          <SiteNav />
-          <AccountSync />
-          <main className="flex-1">{children}</main>
-        </div>
-      </body>
+      <body className="min-h-screen relative"><AppFrame>{children}</AppFrame></body>
     </html>
   );
 }
